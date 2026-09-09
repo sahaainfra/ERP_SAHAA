@@ -29,6 +29,7 @@ const navGroups = [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { id: 'bi', label: 'BI Dashboard', icon: BarChart3 },
       { id: 'projects', label: 'Projects', icon: Building2 },
+      { id: 'planning', label: 'Planning', icon: Calendar },
       { id: 'sites', label: 'Sites', icon: HardHat },
     ]
   },

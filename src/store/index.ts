@@ -366,3 +366,6 @@ export { useDashboardStore } from './dashboardStore';
 
 // Part 06: Project Store
 export { useProjectStore } from './projectStore';
+
+// Part 07: Planning Store
+export { usePlanningStore } from './planningStore';

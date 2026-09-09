@@ -842,3 +842,6 @@ export { dashboardService, DashboardService } from './dashboardService';
 
 // Part 06: Project Service
 export { projectService, ProjectService } from './projectService';
+
+// Part 07: Planning Service
+export { planningService, PlanningService } from './planningService';

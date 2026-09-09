@@ -13,6 +13,7 @@ import { SecurityPage } from '../security/SecurityPage';
 import { ApprovalCenter } from '../workflow/ApprovalCenter';
 import { WorkflowDashboard } from '../workflow/WorkflowDashboard';
 import { BIDashboard } from '../dashboard/BIDashboard';
+import { PlanningDashboard } from '../planning/PlanningDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -109,6 +110,9 @@ export function AppShell() {
     }
     if (activeModule === 'bi') {
       return <BIDashboard />;
+    }
+    if (activeModule === 'planning') {
+      return <PlanningDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
