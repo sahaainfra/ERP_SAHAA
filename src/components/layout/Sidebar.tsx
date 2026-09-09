@@ -53,12 +53,14 @@ const navGroups = [
   {
     label: 'Operations',
     items: [
+      { id: 'procurement-control', label: 'Procurement Control', icon: Truck },
+      { id: 'material-control-center', label: 'Material Control', icon: BarChart3 },
       { id: 'procurement', label: 'Procurement', icon: Truck },
       { id: 'purchase', label: 'Purchase Orders', icon: FileText },
       { id: 'store', label: 'Store & Warehouse', icon: Package },
       { id: 'inventory', label: 'Inventory', icon: Package },
       { id: 'materials', label: 'Material Master', icon: Package },
-      { id: 'material-control', label: 'Material Control', icon: BarChart3 },
+      { id: 'material-control', label: 'Material Analytics', icon: BarChart3 },
       { id: 'vendors', label: 'Vendor Management', icon: Users },
       { id: 'plant', label: 'Plant & Machinery', icon: Wrench },
       { id: 'rmc', label: 'RMC Plant', icon: Beaker },

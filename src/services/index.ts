@@ -881,3 +881,6 @@ export { qualityService, QualityService } from './qualityService';
 
 // Part 19: Material Control Service
 export { materialControlService, MaterialControlService } from './materialControlService';
+
+// Part 20: Procurement Control Service
+export { procurementControlService, ProcurementControlService } from './procurementControlService';

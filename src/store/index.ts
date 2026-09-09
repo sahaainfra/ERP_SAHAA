@@ -405,3 +405,6 @@ export { useQualityStore } from './qualityStore';
 
 // Part 19: Material Control Store
 export { useMaterialControlStore } from './materialControlStore';
+
+// Part 20: Procurement Control Store
+export { useProcurementControlStore } from './procurementControlStore';

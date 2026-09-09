@@ -587,3 +587,6 @@ export * from './quality';
 
 // Re-export all material control types from Part 19
 export * from './materialControl';
+
+// Re-export all procurement control types from Part 20
+export * from './procurementControl';

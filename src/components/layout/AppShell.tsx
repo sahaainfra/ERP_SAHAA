@@ -26,6 +26,8 @@ import { PODashboard } from '../po/PODashboard';
 import { StoreDashboard } from '../store/StoreDashboard';
 import { QualityDashboard } from '../quality/QualityDashboard';
 import { MaterialControlDashboard } from '../materialControl/MaterialControlDashboard';
+import { ProcurementControlCenter } from '../procurementControl/ProcurementControlCenter';
+import { MaterialControlCenter } from '../procurementControl/MaterialControlCenter';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -161,6 +163,12 @@ export function AppShell() {
     }
     if (activeModule === 'material-control') {
       return <MaterialControlDashboard />;
+    }
+    if (activeModule === 'procurement-control') {
+      return <ProcurementControlCenter />;
+    }
+    if (activeModule === 'material-control-center') {
+      return <MaterialControlCenter />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
