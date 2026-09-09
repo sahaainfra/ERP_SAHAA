@@ -566,3 +566,6 @@ export * from './contract';
 
 // Re-export all commercial types from Part 12
 export * from './commercial';
+
+// Re-export all material types from Part 13
+export * from './material';

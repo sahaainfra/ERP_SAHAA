@@ -19,6 +19,7 @@ import { RateDashboard } from '../rate/RateDashboard';
 import { BOQDashboard } from '../boq/BOQDashboard';
 import { ContractDashboard } from '../contract/ContractDashboard';
 import { CommercialDashboard } from '../commercial/CommercialDashboard';
+import { MaterialDashboard } from '../material/MaterialDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -133,6 +134,9 @@ export function AppShell() {
     }
     if (activeModule === 'commercial') {
       return <CommercialDashboard />;
+    }
+    if (activeModule === 'materials') {
+      return <MaterialDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

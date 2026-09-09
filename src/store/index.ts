@@ -384,3 +384,6 @@ export { useContractStore } from './contractStore';
 
 // Part 12: Commercial Store
 export { useCommercialStore } from './commercialStore';
+
+// Part 13: Material Store
+export { useMaterialStore } from './materialStore';

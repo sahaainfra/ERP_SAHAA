@@ -860,3 +860,6 @@ export { contractService, ContractService } from './contractService';
 
 // Part 12: Commercial Service
 export { commercialService, CommercialService } from './commercialService';
+
+// Part 13: Material Service
+export { materialService, MaterialService } from './materialService';
