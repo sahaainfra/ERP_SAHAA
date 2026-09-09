@@ -839,3 +839,6 @@ export { approvalEngine, ApprovalEngine } from './workflowService';
 
 // Part 05: Dashboard Service
 export { dashboardService, DashboardService } from './dashboardService';
+
+// Part 06: Project Service
+export { projectService, ProjectService } from './projectService';

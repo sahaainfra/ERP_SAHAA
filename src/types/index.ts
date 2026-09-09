@@ -523,3 +523,6 @@ export * from './workflow';
 
 // Re-export all dashboard types from Part 05
 export * from './dashboard';
+
+// Re-export all project types from Part 06
+export * from './project';

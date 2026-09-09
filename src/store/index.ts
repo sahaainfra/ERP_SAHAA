@@ -363,3 +363,6 @@ export { useWorkflowStore } from './workflowStore';
 
 // Part 05: Dashboard Store
 export { useDashboardStore } from './dashboardStore';
+
+// Part 06: Project Store
+export { useProjectStore } from './projectStore';

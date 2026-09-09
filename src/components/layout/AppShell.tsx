@@ -7,7 +7,7 @@ import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { Dashboard } from '../dashboard/Dashboard';
 import { SettingsPage } from '../settings/SettingsPage';
-import { ProjectsPage } from '../projects/ProjectsPage';
+import { ProjectObjectPage } from '../projects/ProjectObjectPage';
 import { AdminPage } from '../admin/AdminPage';
 import { SecurityPage } from '../security/SecurityPage';
 import { ApprovalCenter } from '../workflow/ApprovalCenter';
@@ -93,7 +93,7 @@ export function AppShell() {
       return <SettingsPage />;
     }
     if (activeModule === 'projects') {
-      return <ProjectsPage />;
+      return <ProjectObjectPage />;
     }
     if (activeModule === 'admin') {
       return <AdminPage />;
