@@ -378,3 +378,6 @@ export { useRateStore } from './rateStore';
 
 // Part 10: BOQ Store
 export { useBOQStore } from './boqStore';
+
+// Part 11: Contract Store
+export { useContractStore } from './contractStore';

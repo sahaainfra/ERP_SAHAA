@@ -560,3 +560,6 @@ export type {
   OverheadBreakdown as BOQOverheadBreakdown,
   TaxBreakdown as BOQTaxBreakdown,
 } from './boq';
+
+// Re-export all contract types from Part 11
+export * from './contract';

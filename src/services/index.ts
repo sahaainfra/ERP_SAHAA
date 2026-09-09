@@ -854,3 +854,6 @@ export { rateService, RateService } from './rateService';
 
 // Part 10: BOQ Service
 export { boqService, BOQService } from './boqService';
+
+// Part 11: Contract Service
+export { contractService, ContractService } from './contractService';
