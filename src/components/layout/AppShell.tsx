@@ -9,6 +9,7 @@ import { Dashboard } from '../dashboard/Dashboard';
 import { SettingsPage } from '../settings/SettingsPage';
 import { ProjectsPage } from '../projects/ProjectsPage';
 import { AdminPage } from '../admin/AdminPage';
+import { SecurityPage } from '../security/SecurityPage';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -93,6 +94,9 @@ export function AppShell() {
     }
     if (activeModule === 'admin') {
       return <AdminPage />;
+    }
+    if (activeModule === 'security') {
+      return <SecurityPage />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

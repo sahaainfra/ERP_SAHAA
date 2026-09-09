@@ -354,3 +354,6 @@ export const useDataStore = create<DataState>()((set) => ({
 
 // Part 02: Master Data Store
 export { useMasterDataStore } from './masterStore';
+
+// Part 03: Security Store
+export { useSecurityStore } from './securityStore';

@@ -35,6 +35,7 @@ const navGroups = [
     label: 'Enterprise',
     items: [
       { id: 'admin', label: 'Admin Settings', icon: Settings },
+      { id: 'security', label: 'Security & Users', icon: Shield },
     ]
   },
   {

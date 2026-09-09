@@ -830,3 +830,6 @@ export const apiService = ApiService.getInstance();
 
 // Part 02: Master Data Service
 export { masterDataService, MasterDataService } from './masterService';
+
+// Part 03: Security Service
+export { securityService, SecurityService } from './securityService';
