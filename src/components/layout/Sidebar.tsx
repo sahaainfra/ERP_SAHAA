@@ -32,6 +32,13 @@ const navGroups = [
     ]
   },
   {
+    label: 'Workflow',
+    items: [
+      { id: 'approvals', label: 'Approval Center', icon: FileCheck },
+      { id: 'workflow', label: 'Workflow Dashboard', icon: BarChart3 },
+    ]
+  },
+  {
     label: 'Enterprise',
     items: [
       { id: 'admin', label: 'Admin Settings', icon: Settings },

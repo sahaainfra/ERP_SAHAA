@@ -517,3 +517,6 @@ export * from './master';
 
 // Re-export all security types from Part 03
 export * from './security';
+
+// Re-export all workflow types from Part 04
+export * from './workflow';

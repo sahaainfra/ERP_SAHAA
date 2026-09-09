@@ -10,6 +10,8 @@ import { SettingsPage } from '../settings/SettingsPage';
 import { ProjectsPage } from '../projects/ProjectsPage';
 import { AdminPage } from '../admin/AdminPage';
 import { SecurityPage } from '../security/SecurityPage';
+import { ApprovalCenter } from '../workflow/ApprovalCenter';
+import { WorkflowDashboard } from '../workflow/WorkflowDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -97,6 +99,12 @@ export function AppShell() {
     }
     if (activeModule === 'security') {
       return <SecurityPage />;
+    }
+    if (activeModule === 'approvals') {
+      return <ApprovalCenter />;
+    }
+    if (activeModule === 'workflow') {
+      return <WorkflowDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
