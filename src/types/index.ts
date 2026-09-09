@@ -535,3 +535,28 @@ export * from './tender';
 
 // Re-export all rate types from Part 09
 export * from './rate';
+
+// Re-export all BOQ types from Part 10
+// Avoiding conflicts with other modules
+export type {
+  BOQMaster,
+  BOQSection,
+  BOQRevisionType,
+  BOQStatus,
+  BOQDiscount,
+  BOQNegotiation,
+  BOQChange,
+  BOQValidation,
+  BOQValidationType,
+  BOQDashboardKPIs,
+  BOQDocument,
+  ContractConversion,
+  RateSource,
+  DetailedEstimate as BOQDetailedEstimate,
+  AbstractEstimate as BOQAbstractEstimate,
+  ResourceSummary as BOQResourceSummary,
+  CostSummary as BOQCostSummary,
+  BidScenario as BOQBidScenario,
+  OverheadBreakdown as BOQOverheadBreakdown,
+  TaxBreakdown as BOQTaxBreakdown,
+} from './boq';

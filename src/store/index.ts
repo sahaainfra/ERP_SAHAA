@@ -375,3 +375,6 @@ export { useTenderStore } from './tenderStore';
 
 // Part 09: Rate Store
 export { useRateStore } from './rateStore';
+
+// Part 10: BOQ Store
+export { useBOQStore } from './boqStore';

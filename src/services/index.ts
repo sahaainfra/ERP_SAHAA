@@ -851,3 +851,6 @@ export { tenderService, TenderService } from './tenderService';
 
 // Part 09: Rate Service
 export { rateService, RateService } from './rateService';
+
+// Part 10: BOQ Service
+export { boqService, BOQService } from './boqService';

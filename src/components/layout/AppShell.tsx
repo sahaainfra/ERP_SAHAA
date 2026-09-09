@@ -16,6 +16,7 @@ import { BIDashboard } from '../dashboard/BIDashboard';
 import { PlanningDashboard } from '../planning/PlanningDashboard';
 import { TenderDashboard } from '../tender/TenderDashboard';
 import { RateDashboard } from '../rate/RateDashboard';
+import { BOQDashboard } from '../boq/BOQDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -121,6 +122,9 @@ export function AppShell() {
     }
     if (activeModule === 'rate') {
       return <RateDashboard />;
+    }
+    if (activeModule === 'boq') {
+      return <BOQDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
