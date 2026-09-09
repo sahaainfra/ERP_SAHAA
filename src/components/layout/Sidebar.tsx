@@ -54,6 +54,7 @@ const navGroups = [
     label: 'Operations',
     items: [
       { id: 'procurement', label: 'Procurement', icon: Truck },
+      { id: 'purchase', label: 'Purchase Orders', icon: FileText },
       { id: 'inventory', label: 'Inventory', icon: Package },
       { id: 'materials', label: 'Material Master', icon: Package },
       { id: 'vendors', label: 'Vendor Management', icon: Users },

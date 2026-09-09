@@ -390,3 +390,6 @@ export { useMaterialStore } from './materialStore';
 
 // Part 14: Vendor Store
 export { useVendorStore } from './vendorStore';
+
+// Part 15: Procurement Store
+export { useProcurementStore } from './procurementStore';

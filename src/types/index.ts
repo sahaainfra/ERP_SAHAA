@@ -572,3 +572,6 @@ export * from './material';
 
 // Re-export all vendor types from Part 14
 export * from './vendor';
+
+// Re-export all procurement types from Part 15
+export * from './procurement';

@@ -866,3 +866,6 @@ export { materialService, MaterialService } from './materialService';
 
 // Part 14: Vendor Service
 export { vendorService, VendorService } from './vendorService';
+
+// Part 15: Procurement Service
+export { procurementService, ProcurementService } from './procurementService';
