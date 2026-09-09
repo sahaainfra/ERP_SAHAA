@@ -563,3 +563,6 @@ export type {
 
 // Re-export all contract types from Part 11
 export * from './contract';
+
+// Re-export all commercial types from Part 12
+export * from './commercial';

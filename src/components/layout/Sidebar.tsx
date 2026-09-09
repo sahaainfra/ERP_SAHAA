@@ -64,6 +64,7 @@ const navGroups = [
     label: 'Finance',
     items: [
       { id: 'contracts', label: 'Contracts', icon: FileText },
+      { id: 'commercial', label: 'Commercial Changes', icon: DollarSign },
       { id: 'billing', label: 'Billing & RA Bills', icon: ClipboardList },
       { id: 'finance', label: 'Finance & Accounts', icon: DollarSign },
       { id: 'budget', label: 'Budget & Cost', icon: BarChart3 },

@@ -18,6 +18,7 @@ import { TenderDashboard } from '../tender/TenderDashboard';
 import { RateDashboard } from '../rate/RateDashboard';
 import { BOQDashboard } from '../boq/BOQDashboard';
 import { ContractDashboard } from '../contract/ContractDashboard';
+import { CommercialDashboard } from '../commercial/CommercialDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -129,6 +130,9 @@ export function AppShell() {
     }
     if (activeModule === 'contracts') {
       return <ContractDashboard />;
+    }
+    if (activeModule === 'commercial') {
+      return <CommercialDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

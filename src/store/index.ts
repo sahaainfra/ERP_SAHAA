@@ -381,3 +381,6 @@ export { useBOQStore } from './boqStore';
 
 // Part 11: Contract Store
 export { useContractStore } from './contractStore';
+
+// Part 12: Commercial Store
+export { useCommercialStore } from './commercialStore';
