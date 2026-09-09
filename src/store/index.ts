@@ -387,3 +387,6 @@ export { useCommercialStore } from './commercialStore';
 
 // Part 13: Material Store
 export { useMaterialStore } from './materialStore';
+
+// Part 14: Vendor Store
+export { useVendorStore } from './vendorStore';

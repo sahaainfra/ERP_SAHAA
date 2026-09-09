@@ -569,3 +569,6 @@ export * from './commercial';
 
 // Re-export all material types from Part 13
 export * from './material';
+
+// Re-export all vendor types from Part 14
+export * from './vendor';

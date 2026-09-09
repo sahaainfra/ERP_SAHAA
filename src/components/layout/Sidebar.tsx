@@ -56,6 +56,7 @@ const navGroups = [
       { id: 'procurement', label: 'Procurement', icon: Truck },
       { id: 'inventory', label: 'Inventory', icon: Package },
       { id: 'materials', label: 'Material Master', icon: Package },
+      { id: 'vendors', label: 'Vendor Management', icon: Users },
       { id: 'plant', label: 'Plant & Machinery', icon: Wrench },
       { id: 'rmc', label: 'RMC Plant', icon: Beaker },
       { id: 'labour', label: 'Labour', icon: Users },

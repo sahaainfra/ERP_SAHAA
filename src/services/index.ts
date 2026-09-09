@@ -863,3 +863,6 @@ export { commercialService, CommercialService } from './commercialService';
 
 // Part 13: Material Service
 export { materialService, MaterialService } from './materialService';
+
+// Part 14: Vendor Service
+export { vendorService, VendorService } from './vendorService';
