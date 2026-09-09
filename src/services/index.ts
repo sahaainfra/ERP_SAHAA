@@ -878,3 +878,6 @@ export { storeService, StoreService } from './storeService';
 
 // Part 18: Quality Service
 export { qualityService, QualityService } from './qualityService';
+
+// Part 19: Material Control Service
+export { materialControlService, MaterialControlService } from './materialControlService';

@@ -584,3 +584,6 @@ export * from './store';
 
 // Re-export all quality types from Part 18
 export * from './quality';
+
+// Re-export all material control types from Part 19
+export * from './materialControl';

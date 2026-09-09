@@ -25,6 +25,7 @@ import { ProcurementDashboard } from '../procurement/ProcurementDashboard';
 import { PODashboard } from '../po/PODashboard';
 import { StoreDashboard } from '../store/StoreDashboard';
 import { QualityDashboard } from '../quality/QualityDashboard';
+import { MaterialControlDashboard } from '../materialControl/MaterialControlDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -157,6 +158,9 @@ export function AppShell() {
     }
     if (activeModule === 'quality') {
       return <QualityDashboard />;
+    }
+    if (activeModule === 'material-control') {
+      return <MaterialControlDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
