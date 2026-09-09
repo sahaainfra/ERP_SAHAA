@@ -575,3 +575,6 @@ export * from './vendor';
 
 // Re-export all procurement types from Part 15
 export * from './procurement';
+
+// Re-export all PO types from Part 16
+export * from './po';

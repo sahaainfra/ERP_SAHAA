@@ -393,3 +393,6 @@ export { useVendorStore } from './vendorStore';
 
 // Part 15: Procurement Store
 export { useProcurementStore } from './procurementStore';
+
+// Part 16: PO Store
+export { usePOStore } from './poStore';

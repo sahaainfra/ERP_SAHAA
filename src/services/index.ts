@@ -869,3 +869,6 @@ export { vendorService, VendorService } from './vendorService';
 
 // Part 15: Procurement Service
 export { procurementService, ProcurementService } from './procurementService';
+
+// Part 16: PO Service
+export { poService, POService } from './poService';
