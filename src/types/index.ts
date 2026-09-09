@@ -529,3 +529,6 @@ export * from './project';
 
 // Re-export all planning types from Part 07
 export * from './planning';
+
+// Re-export all tender types from Part 08
+export * from './tender';
