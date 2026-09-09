@@ -578,3 +578,6 @@ export * from './procurement';
 
 // Re-export all PO types from Part 16
 export * from './po';
+
+// Re-export all store types from Part 17
+export * from './store';

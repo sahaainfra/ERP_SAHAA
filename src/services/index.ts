@@ -872,3 +872,6 @@ export { procurementService, ProcurementService } from './procurementService';
 
 // Part 16: PO Service
 export { poService, POService } from './poService';
+
+// Part 17: Store & Warehouse Service
+export { storeService, StoreService } from './storeService';

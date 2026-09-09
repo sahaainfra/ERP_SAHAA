@@ -396,3 +396,6 @@ export { useProcurementStore } from './procurementStore';
 
 // Part 16: PO Store
 export { usePOStore } from './poStore';
+
+// Part 17: Store & Warehouse Store
+export { useStoreStore } from './storeStore';

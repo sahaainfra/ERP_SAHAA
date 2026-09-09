@@ -23,6 +23,7 @@ import { MaterialDashboard } from '../material/MaterialDashboard';
 import { VendorDashboard } from '../vendor/VendorDashboard';
 import { ProcurementDashboard } from '../procurement/ProcurementDashboard';
 import { PODashboard } from '../po/PODashboard';
+import { StoreDashboard } from '../store/StoreDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -149,6 +150,9 @@ export function AppShell() {
     }
     if (activeModule === 'purchase') {
       return <PODashboard />;
+    }
+    if (activeModule === 'store') {
+      return <StoreDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
