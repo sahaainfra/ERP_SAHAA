@@ -24,6 +24,7 @@ import { VendorDashboard } from '../vendor/VendorDashboard';
 import { ProcurementDashboard } from '../procurement/ProcurementDashboard';
 import { PODashboard } from '../po/PODashboard';
 import { StoreDashboard } from '../store/StoreDashboard';
+import { QualityDashboard } from '../quality/QualityDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -153,6 +154,9 @@ export function AppShell() {
     }
     if (activeModule === 'store') {
       return <StoreDashboard />;
+    }
+    if (activeModule === 'quality') {
+      return <QualityDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

@@ -875,3 +875,6 @@ export { poService, POService } from './poService';
 
 // Part 17: Store & Warehouse Service
 export { storeService, StoreService } from './storeService';
+
+// Part 18: Quality Service
+export { qualityService, QualityService } from './qualityService';

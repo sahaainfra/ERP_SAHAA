@@ -399,3 +399,6 @@ export { usePOStore } from './poStore';
 
 // Part 17: Store & Warehouse Store
 export { useStoreStore } from './storeStore';
+
+// Part 18: Quality Store
+export { useQualityStore } from './qualityStore';
