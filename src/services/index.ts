@@ -848,3 +848,6 @@ export { planningService, PlanningService } from './planningService';
 
 // Part 08: Tender Service
 export { tenderService, TenderService } from './tenderService';
+
+// Part 09: Rate Service
+export { rateService, RateService } from './rateService';

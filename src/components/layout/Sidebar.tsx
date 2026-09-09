@@ -31,6 +31,7 @@ const navGroups = [
       { id: 'projects', label: 'Projects', icon: Building2 },
       { id: 'planning', label: 'Planning', icon: Calendar },
       { id: 'tender', label: 'Tender', icon: FileText },
+      { id: 'rate', label: 'Rate Library', icon: FileText },
       { id: 'sites', label: 'Sites', icon: HardHat },
     ]
   },

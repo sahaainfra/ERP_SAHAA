@@ -15,6 +15,7 @@ import { WorkflowDashboard } from '../workflow/WorkflowDashboard';
 import { BIDashboard } from '../dashboard/BIDashboard';
 import { PlanningDashboard } from '../planning/PlanningDashboard';
 import { TenderDashboard } from '../tender/TenderDashboard';
+import { RateDashboard } from '../rate/RateDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -117,6 +118,9 @@ export function AppShell() {
     }
     if (activeModule === 'tender') {
       return <TenderDashboard />;
+    }
+    if (activeModule === 'rate') {
+      return <RateDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
