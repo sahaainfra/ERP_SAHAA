@@ -8,6 +8,7 @@ import { TopBar } from './TopBar';
 import { Dashboard } from '../dashboard/Dashboard';
 import { SettingsPage } from '../settings/SettingsPage';
 import { ProjectsPage } from '../projects/ProjectsPage';
+import { AdminPage } from '../admin/AdminPage';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -89,6 +90,9 @@ export function AppShell() {
     }
     if (activeModule === 'projects') {
       return <ProjectsPage />;
+    }
+    if (activeModule === 'admin') {
+      return <AdminPage />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

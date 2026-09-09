@@ -32,6 +32,12 @@ const navGroups = [
     ]
   },
   {
+    label: 'Enterprise',
+    items: [
+      { id: 'admin', label: 'Admin Settings', icon: Settings },
+    ]
+  },
+  {
     label: 'Operations',
     items: [
       { id: 'procurement', label: 'Procurement', icon: Truck },

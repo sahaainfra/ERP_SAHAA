@@ -827,3 +827,6 @@ export const calculationService = CalculationService.getInstance();
 export const searchService = SearchService.getInstance();
 export const statusService = StatusService.getInstance();
 export const apiService = ApiService.getInstance();
+
+// Part 02: Master Data Service
+export { masterDataService, MasterDataService } from './masterService';

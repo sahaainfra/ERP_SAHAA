@@ -511,3 +511,6 @@ export interface ActivityItem {
 
 // --- Theme ---
 export type ThemeMode = 'light' | 'dark' | 'system';
+
+// Re-export all master data types from Part 02
+export * from './master';

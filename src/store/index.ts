@@ -351,3 +351,6 @@ export const useDataStore = create<DataState>()((set) => ({
     set({ companies, projects, activities });
   },
 }));
+
+// Part 02: Master Data Store
+export { useMasterDataStore } from './masterStore';
