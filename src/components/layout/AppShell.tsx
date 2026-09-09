@@ -14,6 +14,7 @@ import { ApprovalCenter } from '../workflow/ApprovalCenter';
 import { WorkflowDashboard } from '../workflow/WorkflowDashboard';
 import { BIDashboard } from '../dashboard/BIDashboard';
 import { PlanningDashboard } from '../planning/PlanningDashboard';
+import { TenderDashboard } from '../tender/TenderDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -113,6 +114,9 @@ export function AppShell() {
     }
     if (activeModule === 'planning') {
       return <PlanningDashboard />;
+    }
+    if (activeModule === 'tender') {
+      return <TenderDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

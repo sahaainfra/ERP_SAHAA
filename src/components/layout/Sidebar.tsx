@@ -30,6 +30,7 @@ const navGroups = [
       { id: 'bi', label: 'BI Dashboard', icon: BarChart3 },
       { id: 'projects', label: 'Projects', icon: Building2 },
       { id: 'planning', label: 'Planning', icon: Calendar },
+      { id: 'tender', label: 'Tender', icon: FileText },
       { id: 'sites', label: 'Sites', icon: HardHat },
     ]
   },

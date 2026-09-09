@@ -369,3 +369,6 @@ export { useProjectStore } from './projectStore';
 
 // Part 07: Planning Store
 export { usePlanningStore } from './planningStore';
+
+// Part 08: Tender Store
+export { useTenderStore } from './tenderStore';
