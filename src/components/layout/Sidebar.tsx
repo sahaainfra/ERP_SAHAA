@@ -27,6 +27,7 @@ const navGroups = [
     label: 'Main',
     items: [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { id: 'bi', label: 'BI Dashboard', icon: BarChart3 },
       { id: 'projects', label: 'Projects', icon: Building2 },
       { id: 'sites', label: 'Sites', icon: HardHat },
     ]

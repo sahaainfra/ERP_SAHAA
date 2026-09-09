@@ -357,3 +357,9 @@ export { useMasterDataStore } from './masterStore';
 
 // Part 03: Security Store
 export { useSecurityStore } from './securityStore';
+
+// Part 04: Workflow Store
+export { useWorkflowStore } from './workflowStore';
+
+// Part 05: Dashboard Store
+export { useDashboardStore } from './dashboardStore';

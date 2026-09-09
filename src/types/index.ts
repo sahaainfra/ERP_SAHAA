@@ -520,3 +520,6 @@ export * from './security';
 
 // Re-export all workflow types from Part 04
 export * from './workflow';
+
+// Re-export all dashboard types from Part 05
+export * from './dashboard';

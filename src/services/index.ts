@@ -833,3 +833,9 @@ export { masterDataService, MasterDataService } from './masterService';
 
 // Part 03: Security Service
 export { securityService, SecurityService } from './securityService';
+
+// Part 04: Workflow Service
+export { approvalEngine, ApprovalEngine } from './workflowService';
+
+// Part 05: Dashboard Service
+export { dashboardService, DashboardService } from './dashboardService';
