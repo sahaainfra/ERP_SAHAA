@@ -593,3 +593,6 @@ export * from './procurementControl';
 
 // Re-export all MB types from Part 21
 export * from './mb';
+
+// Re-export all billing types from Part 22
+export * from './billing';

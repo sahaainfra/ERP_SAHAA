@@ -30,6 +30,8 @@ import { ProcurementControlCenter } from '../procurementControl/ProcurementContr
 import { MaterialControlCenter } from '../procurementControl/MaterialControlCenter';
 import { MBDashboard } from '../mb/MBDashboard';
 import { MBList } from '../mb/MBList';
+import { BillingDashboard } from '../billing/BillingDashboard';
+import { BillList } from '../billing/BillList';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -177,6 +179,12 @@ export function AppShell() {
     }
     if (activeModule === 'mb-list') {
       return <MBList />;
+    }
+    if (activeModule === 'billing') {
+      return <BillingDashboard />;
+    }
+    if (activeModule === 'bill-list') {
+      return <BillList />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

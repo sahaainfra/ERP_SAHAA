@@ -62,6 +62,7 @@ const navGroups = [
       { id: 'materials', label: 'Material Master', icon: Package },
       { id: 'material-control', label: 'Material Analytics', icon: BarChart3 },
       { id: 'mb', label: 'Measurement Book', icon: FileText },
+      { id: 'billing', label: 'Billing', icon: DollarSign },
       { id: 'vendors', label: 'Vendor Management', icon: Users },
       { id: 'plant', label: 'Plant & Machinery', icon: Wrench },
       { id: 'rmc', label: 'RMC Plant', icon: Beaker },

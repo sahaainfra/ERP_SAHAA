@@ -411,3 +411,6 @@ export { useProcurementControlStore } from './procurementControlStore';
 
 // Part 21: Measurement Book Store
 export { useMBStore } from './mbStore';
+
+// Part 22: Billing Store
+export { useBillingStore } from './billingStore';

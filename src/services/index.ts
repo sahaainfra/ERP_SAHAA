@@ -887,3 +887,6 @@ export { procurementControlService, ProcurementControlService } from './procurem
 
 // Part 21: Measurement Book Service
 export { mbService, MBService } from './mbService';
+
+// Part 22: Billing Service
+export { billingService, BillingService } from './billingService';
