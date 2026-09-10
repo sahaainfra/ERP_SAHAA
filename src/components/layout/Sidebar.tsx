@@ -8,7 +8,7 @@ import {
   LayoutDashboard, Building2, HardHat, Truck, FileText, DollarSign,
   Users, Package, ClipboardList, Shield, BarChart3, Settings,
   ChevronLeft, ChevronRight, FolderTree, Wrench, Beaker,
-  Calendar, FileCheck, Scale
+  Calendar, FileCheck, Scale, Clock
 } from 'lucide-react';
 import { Logo } from '../common/Logo';
 import { useThemeStore } from '../../store';
@@ -67,6 +67,7 @@ const navGroups = [
       { id: 'plant', label: 'Plant & Machinery', icon: Wrench },
       { id: 'rmc', label: 'RMC Plant', icon: Beaker },
       { id: 'labour', label: 'Labour', icon: Users },
+      { id: 'attendance', label: 'Attendance', icon: Clock },
     ]
   },
   {

@@ -599,3 +599,31 @@ export * from './billing';
 
 // Re-export all finance types from Part 24
 export * from './finance';
+
+// Re-export all HR types from Part 25 (excluding conflicting names)
+export type {
+  Employee,
+  EmploymentHistory,
+  SalaryStructure,
+  Payroll,
+  LeaveType,
+  LeaveRecord,
+  HolidayCalendar,
+  LossOfPay,
+  OvertimeRecord,
+  Advance,
+  Training,
+  PerformanceReview,
+  TransferHistory,
+  ExitRecord,
+  Labour,
+  LabourDocument,
+  ProjectManpower,
+  HRDashboardKPIs,
+  Payslip,
+  PayslipEarning,
+  PayslipDeduction
+} from './hr';
+
+// Re-export all attendance types from Part 26
+export * from './attendance';
