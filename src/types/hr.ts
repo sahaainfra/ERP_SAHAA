@@ -1,6 +1,6 @@
 // ============================================================
-// BUILDCORE ERP - HR & WORKFORCE MANAGEMENT TYPES
-// Part 25: HR / Employee / Labour / Payroll Management
+// BUILDCORE ERP - HR & PAYROLL TYPES
+// Part 25: Complete HR/Employee/Labour/Payroll Management
 // ============================================================
 
 // ============================================================
@@ -14,15 +14,15 @@ export interface Employee {
   contact: string;
   address: string;
   emergencyContact: string;
-  departmentId: string;
-  designationId: string;
-  roleId: string;
-  projectId?: string;
-  siteId?: string;
+  department: string;
+  designation: string;
+  role: EmployeeRole;
+  project?: string;
+  site?: string;
   joiningDate: string;
   employmentType: EmploymentType;
-  reportingManagerId?: string;
-  costCenterId: string;
+  reportingManager?: string;
+  costCentre: string;
   bankDetails: BankDetails;
   statutoryInfo: StatutoryInfo;
   documents: EmployeeDocument[];
@@ -31,9 +31,23 @@ export interface Employee {
   updatedAt: string;
 }
 
-export type EmploymentType = 'PERMANENT' | 'CONTRACT' | 'TEMPORARY' | 'INTERN';
+export type EmployeeRole = 
+  | 'HO_EMPLOYEE'
+  | 'SITE_EMPLOYEE'
+  | 'ENGINEER'
+  | 'SUPERVISOR'
+  | 'SKILLED_LABOUR'
+  | 'UNSKILLED_LABOUR'
+  | 'CONTRACT_LABOUR'
+  | 'LABOUR_CONTRACTOR'
+  | 'PROJECT_MANPOWER';
 
-export type EmployeeStatus = 'ACTIVE' | 'ON_LEAVE' | 'TERMINATED' | 'RESIGNED' | 'SUSPENDED';
+export type EmploymentType = 
+  | 'PERMANENT'
+  | 'CONTRACTUAL'
+  | 'TEMPORARY'
+  | 'DAILY_WAGE'
+  | 'CONTRACT_LABOUR';
 
 export interface BankDetails {
   bankName: string;
@@ -60,6 +74,8 @@ export interface EmployeeDocument {
   documentFile?: string;
 }
 
+export type EmployeeStatus = 'ACTIVE' | 'INACTIVE' | 'TERMINATED' | 'ON_LEAVE' | 'RESIGNED';
+
 // ============================================================
 // 2. EMPLOYMENT HISTORY
 // ============================================================
@@ -68,9 +84,7 @@ export interface EmploymentHistory {
   employeeId: string;
   eventType: EmploymentEventType;
   eventDate: string;
-  oldValue?: string;
-  newValue?: string;
-  description: string;
+  details: EmploymentEventDetails;
   createdBy: string;
   createdAt: string;
 }
@@ -82,72 +96,42 @@ export type EmploymentEventType =
   | 'SALARY_REVISION'
   | 'DESIGNATION_CHANGE'
   | 'PROJECT_TRANSFER'
-  | 'REPORTING_MANAGER_CHANGE'
+  | 'MANAGER_CHANGE'
   | 'LEAVE'
   | 'EXIT';
 
-// ============================================================
-// 3. LABOUR MASTER
-// ============================================================
-export interface Labour {
-  id: string;
-  labourId: string;
-  name: string;
-  trade: string;
-  skill: SkillLevel;
-  labourContractorId?: string;
-  projectId: string;
-  siteId: string;
-  wageRate: number;
-  wageMode: WageMode;
-  joiningDate: string;
-  shift: ShiftType;
-  documents: LabourDocument[];
-  safetyStatus: SafetyStatus;
-  status: LabourStatus;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type SkillLevel = 'UNSKILLED' | 'SEMI_SKILLED' | 'SKILLED' | 'HIGHLY_SKILLED';
-
-export type WageMode = 'MONTHLY' | 'DAILY' | 'WEEKLY' | 'PIECE_RATE' | 'QUANTITY_BASED' | 'ATTENDANCE_BASED';
-
-export type ShiftType = 'MORNING' | 'AFTERNOON' | 'NIGHT' | 'ROTATIONAL';
-
-export type SafetyStatus = 'COMPLIANT' | 'NON_COMPLIANT' | 'PENDING_TRAINING' | 'UNDER_OBSERVATION';
-
-export type LabourStatus = 'ACTIVE' | 'INACTIVE' | 'TERMINATED';
-
-export interface LabourDocument {
-  id: string;
-  documentType: string;
-  documentNumber: string;
-  issueDate: string;
-  expiryDate?: string;
-  documentFile?: string;
+export interface EmploymentEventDetails {
+  fromValue?: string;
+  toValue?: string;
+  project?: string;
+  site?: string;
+  manager?: string;
+  salary?: number;
+  designation?: string;
+  reason?: string;
 }
 
 // ============================================================
-// 4. SALARY STRUCTURE
+// 3. SALARY STRUCTURE
 // ============================================================
 export interface SalaryStructure {
   id: string;
   employeeId: string;
-  effectiveFrom: string;
-  effectiveTo?: string;
   basic: number;
   hra: number;
   allowances: Allowance[];
-  siteAllowance?: number;
-  foodAllowance?: number;
-  travelAllowance?: number;
-  bonus?: number;
-  incentive?: number;
-  overtimeRate?: number;
+  siteAllowance: number;
+  foodAllowance: number;
+  travelAllowance: number;
+  bonus: number;
+  incentive: number;
+  overtime: number;
   deductions: Deduction[];
+  advanceRecovery: number;
   grossSalary: number;
   netSalary: number;
+  effectiveFrom: string;
+  effectiveTo?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -163,27 +147,21 @@ export interface Deduction {
   id: string;
   name: string;
   amount: number;
-  deductionType: DeductionType;
+  isStatutory: boolean;
 }
 
-export type DeductionType = 'PF' | 'ESI' | 'TDS' | 'PROFESSIONAL_TAX' | 'ADVANCE_RECOVERY' | 'OTHER';
-
 // ============================================================
-// 5. PAYROLL
+// 4. PAYROLL
 // ============================================================
 export interface Payroll {
   id: string;
-  payrollId: string;
   employeeId: string;
-  period: string; // YYYY-MM
-  basic: number;
-  hra: number;
-  allowances: number;
-  overtime: number;
-  bonus: number;
-  incentive: number;
+  period: string;
+  attendance: AttendanceRecord[];
+  leaveRecords: LeaveRecord[];
+  overtimeRecords: OvertimeRecord[];
+  salaryStructure: SalaryStructure;
   grossSalary: number;
-  deductions: PayrollDeduction[];
   totalDeductions: number;
   netSalary: number;
   status: PayrollStatus;
@@ -196,257 +174,48 @@ export interface Payroll {
   updatedAt: string;
 }
 
-export interface PayrollDeduction {
-  id: string;
-  name: string;
-  amount: number;
-  deductionType: DeductionType;
-}
-
-export type PayrollStatus = 'DRAFT' | 'CALCULATED' | 'APPROVED' | 'POSTED' | 'PAID' | 'CANCELLED';
+export type PayrollStatus = 
+  | 'DRAFT'
+  | 'CALCULATED'
+  | 'APPROVED'
+  | 'POSTED'
+  | 'PAID'
+  | 'CANCELLED';
 
 // ============================================================
-// 6. CONSTRUCTION WAGE MODES
+// 5. CONSTRUCTION WAGE MODES
 // ============================================================
 export interface WageCalculation {
   id: string;
-  labourId: string;
+  employeeId: string;
   period: string;
   wageMode: WageMode;
+  calculation: WageCalculationDetails;
+  totalWages: number;
+  createdAt: string;
+}
+
+export type WageMode = 
+  | 'MONTHLY'
+  | 'DAILY'
+  | 'WEEKLY'
+  | 'PIECE_RATE'
+  | 'QUANTITY_BASED'
+  | 'ATTENDANCE_BASED';
+
+export interface WageCalculationDetails {
   baseRate: number;
-  quantity?: number; // For piece rate / quantity based
-  attendanceDays?: number; // For attendance based
+  units?: number;
+  quantity?: number;
+  daysWorked?: number;
   overtimeHours?: number;
   overtimeRate?: number;
-  basicWage: number;
-  overtimeAmount: number;
-  allowances: number;
-  deductions: number;
-  netWage: number;
-  status: WageStatus;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type WageStatus = 'CALCULATED' | 'APPROVED' | 'PAID';
-
-// ============================================================
-// 7. LEAVE MANAGEMENT
-// ============================================================
-export interface LeaveType {
-  id: string;
-  name: string;
-  code: string;
-  isPaid: boolean;
-  maxDaysPerYear?: number;
-  carryForwardAllowed: boolean;
-  maxCarryForward?: number;
-  requiresApproval: boolean;
-  status: 'ACTIVE' | 'INACTIVE';
-}
-
-export interface LeaveEntitlement {
-  id: string;
-  employeeId: string;
-  leaveTypeId: string;
-  year: number;
-  entitledDays: number;
-  usedDays: number;
-  balanceDays: number;
-  carryForwardDays: number;
-}
-
-export interface LeaveRequest {
-  id: string;
-  requestId: string;
-  employeeId: string;
-  leaveTypeId: string;
-  fromDate: string;
-  toDate: string;
-  totalDays: number;
-  reason: string;
-  status: LeaveStatus;
-  approvedBy?: string;
-  approvedAt?: string;
-  rejectionReason?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type LeaveStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
-
-export interface HolidayCalendar {
-  id: string;
-  year: number;
-  holidays: Holiday[];
-}
-
-export interface Holiday {
-  id: string;
-  date: string;
-  name: string;
-  isOptional: boolean;
-}
-
-export interface LossOfPay {
-  id: string;
-  employeeId: string;
-  date: string;
-  reason: string;
-  approvedBy: string;
-  createdAt: string;
+  pieceRate?: number;
+  piecesCompleted?: number;
 }
 
 // ============================================================
-// 8. ADVANCE
-// ============================================================
-export interface Advance {
-  id: string;
-  advanceId: string;
-  employeeId: string;
-  amount: number;
-  purpose: string;
-  requestDate: string;
-  approvedBy?: string;
-  approvedAt?: string;
-  paidAt?: string;
-  recoveryStartDate?: string;
-  recoveryEndDate?: string;
-  recoveredAmount: number;
-  balanceAmount: number;
-  status: AdvanceStatus;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type AdvanceStatus = 'REQUESTED' | 'APPROVED' | 'PAID' | 'PARTIALLY_RECOVERED' | 'FULLY_RECOVERED' | 'REJECTED';
-
-export interface AdvanceRecovery {
-  id: string;
-  advanceId: string;
-  payrollId: string;
-  recoveryAmount: number;
-  recoveryDate: string;
-}
-
-// ============================================================
-// 9. TRAINING
-// ============================================================
-export interface Training {
-  id: string;
-  trainingId: string;
-  name: string;
-  type: TrainingType;
-  description: string;
-  trainer: string;
-  startDate: string;
-  endDate: string;
-  location: string;
-  maxParticipants: number;
-  participants: TrainingParticipant[];
-  status: TrainingStatus;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type TrainingType = 'SAFETY_INDUTION' | 'SKILL_TRAINING' | 'CERTIFICATION' | 'REFRESHER';
-
-export type TrainingStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-
-export interface TrainingParticipant {
-  id: string;
-  trainingId: string;
-  employeeId: string;
-  attendanceStatus: 'ATTENDED' | 'ABSENT' | 'PARTIAL';
-  certificationObtained: boolean;
-  certificationExpiry?: string;
-}
-
-export interface Certification {
-  id: string;
-  employeeId: string;
-  certificationName: string;
-  certificationNumber: string;
-  issueDate: string;
-  expiryDate: string;
-  issuingAuthority: string;
-  documentFile?: string;
-}
-
-// ============================================================
-// 10. HR DASHBOARD KPIs
-// ============================================================
-export interface HRDashboardKPIs {
-  totalManpower: number;
-  siteManpower: number;
-  labourCount: number;
-  staffCount: number;
-  attendanceToday: number;
-  attendancePercentage: number;
-  overtimeHours: number;
-  payrollProcessed: number;
-  labourCost: number;
-  newJoiners: number;
-  exits: number;
-  trainingScheduled: number;
-  documentExpiring: number;
-}
-
-// ============================================================
-// 11. ATTENDANCE
-// ============================================================
-export interface Attendance {
-  id: string;
-  employeeId: string;
-  date: string;
-  checkIn?: string;
-  checkOut?: string;
-  status: AttendanceStatus;
-  overtimeHours: number;
-  remarks?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'HALF_DAY' | 'ON_LEAVE' | 'HOLIDAY' | 'WEEKLY_OFF';
-
-// ============================================================
-// 12. PERFORMANCE
-// ============================================================
-export interface PerformanceReview {
-  id: string;
-  employeeId: string;
-  reviewPeriod: string;
-  reviewDate: string;
-  reviewerId: string;
-  ratings: PerformanceRating[];
-  overallRating: number;
-  comments: string;
-  goals: PerformanceGoal[];
-  status: PerformanceStatus;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PerformanceRating {
-  id: string;
-  parameter: string;
-  rating: number; // 1-5
-  comments?: string;
-}
-
-export interface PerformanceGoal {
-  id: string;
-  goal: string;
-  targetDate: string;
-  status: 'PENDING' | 'ACHIEVED' | 'PARTIAL' | 'NOT_ACHIEVED';
-  comments?: string;
-}
-
-export type PerformanceStatus = 'DRAFT' | 'SUBMITTED' | 'APPROVED' | 'REJECTED';
-
-// ============================================================
-// 13. ATTENDANCE RECORD
+// 6. ATTENDANCE
 // ============================================================
 export interface AttendanceRecord {
   id: string;
@@ -457,14 +226,44 @@ export interface AttendanceRecord {
   status: AttendanceStatus;
   hoursWorked: number;
   overtimeHours: number;
+  siteId?: string;
   remarks?: string;
   createdAt: string;
 }
 
+export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'HALF_DAY' | 'LEAVE' | 'HOLIDAY' | 'WEEKLY_OFF';
+
 // ============================================================
-// 14. LEAVE RECORD
+// 7. LEAVE MANAGEMENT
 // ============================================================
-export interface LeaveRecord {
+export interface LeaveType {
+  id: string;
+  name: string;
+  code: string;
+  entitlement: number;
+  accrualRate: number;
+  carryForward: boolean;
+  maxCarryForward?: number;
+  isPaid: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeaveBalance {
+  id: string;
+  employeeId: string;
+  leaveTypeId: string;
+  year: number;
+  entitlement: number;
+  used: number;
+  balance: number;
+  carryForward: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeaveRequest {
   id: string;
   employeeId: string;
   leaveTypeId: string;
@@ -472,7 +271,7 @@ export interface LeaveRecord {
   toDate: string;
   days: number;
   reason: string;
-  status: LeaveStatus;
+  status: LeaveRequestStatus;
   approvedBy?: string;
   approvedAt?: string;
   rejectionReason?: string;
@@ -480,20 +279,56 @@ export interface LeaveRecord {
   updatedAt: string;
 }
 
-// ============================================================
-// 15. LEAVE ON LOP
-// ============================================================
-export interface LeaveOnlop {
+export type LeaveRequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+
+export interface HolidayCalendar {
+  id: string;
+  year: number;
+  holidays: Holiday[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Holiday {
+  id: string;
+  date: string;
+  name: string;
+  type: 'MANDATORY' | 'OPTIONAL';
+  isRecurring: boolean;
+}
+
+export interface LossOfPay {
   id: string;
   employeeId: string;
   date: string;
   reason: string;
-  approvedBy: string;
+  days: number;
   createdAt: string;
 }
 
+export interface LeaveRecord {
+  id: string;
+  employeeId: string;
+  leaveTypeId: string;
+  fromDate: string;
+  toDate: string;
+  days: number;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  createdAt: string;
+}
+
+export interface ProjectManpower {
+  id: string;
+  projectId: string;
+  employeeId: string;
+  siteId: string;
+  assignedDate: string;
+  role: string;
+  status: 'ACTIVE' | 'INACTIVE';
+}
+
 // ============================================================
-// 16. OVERTIME RECORD
+// 8. OVERTIME
 // ============================================================
 export interface OvertimeRecord {
   id: string;
@@ -504,19 +339,98 @@ export interface OvertimeRecord {
   amount: number;
   approvedBy?: string;
   approvedAt?: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
   createdAt: string;
 }
 
 // ============================================================
-// 17. TRANSFER HISTORY
+// 9. ADVANCE
+// ============================================================
+export interface Advance {
+  id: string;
+  employeeId: string;
+  amount: number;
+  reason: string;
+  requestDate: string;
+  status: AdvanceStatus;
+  approvedBy?: string;
+  approvedAt?: string;
+  paidAt?: string;
+  recoverySchedule: RecoverySchedule[];
+  totalRecovered: number;
+  balanceAmount: number;
+  settledAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AdvanceStatus = 
+  | 'REQUESTED'
+  | 'APPROVED'
+  | 'PAID'
+  | 'RECOVERING'
+  | 'SETTLED'
+  | 'REJECTED';
+
+export interface RecoverySchedule {
+  id: string;
+  advanceId: string;
+  period: string;
+  amount: number;
+  recoveredAmount: number;
+  status: 'PENDING' | 'RECOVERED';
+  recoveredAt?: string;
+}
+
+// ============================================================
+// 10. TRAINING
+// ============================================================
+export interface Training {
+  id: string;
+  employeeId: string;
+  trainingType: TrainingType;
+  title: string;
+  trainer: string;
+  startDate: string;
+  endDate: string;
+  certification?: string;
+  certificationExpiry?: string;
+  status: TrainingStatus;
+  renewalRequired: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type TrainingType = 'SAFETY_INDUTION' | 'SKILL' | 'CERTIFICATION' | 'OTHER';
+export type TrainingStatus = 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
+
+// ============================================================
+// 11. PERFORMANCE
+// ============================================================
+export interface PerformanceReview {
+  id: string;
+  employeeId: string;
+  reviewPeriod: string;
+  reviewer: string;
+  rating: number;
+  strengths: string;
+  areasForImprovement: string;
+  goals: string;
+  comments: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ============================================================
+// 12. TRANSFER HISTORY
 // ============================================================
 export interface TransferHistory {
   id: string;
   employeeId: string;
-  fromProjectId?: string;
-  toProjectId?: string;
-  fromSiteId?: string;
-  toSiteId?: string;
+  fromProject?: string;
+  toProject?: string;
+  fromSite?: string;
+  toSite?: string;
   transferDate: string;
   reason: string;
   approvedBy: string;
@@ -524,7 +438,7 @@ export interface TransferHistory {
 }
 
 // ============================================================
-// 18. EXIT RECORD
+// 13. EXIT
 // ============================================================
 export interface ExitRecord {
   id: string;
@@ -532,49 +446,117 @@ export interface ExitRecord {
   exitDate: string;
   exitType: 'RESIGNATION' | 'TERMINATION' | 'RETIREMENT' | 'END_OF_CONTRACT';
   reason: string;
-  noticePeriodDays: number;
+  noticePeriod: number;
   lastWorkingDay: string;
-  fullAndFinalSettlement: boolean;
+  fullAndFinalSettlement: number;
   exitInterviewCompleted: boolean;
-  createdBy: string;
+  clearanceCompleted: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 // ============================================================
-// 19. LABOUR CONTRACTOR
+// 14. LABOUR MASTER
+// ============================================================
+export interface Labour {
+  id: string;
+  labourId: string;
+  name: string;
+  trade: string;
+  skill: LabourSkill;
+  labourContractor?: string;
+  project: string;
+  site: string;
+  wageRate: number;
+  wageMode: WageMode;
+  joiningDate: string;
+  shift: string;
+  documents: LabourDocument[];
+  safetyStatus: SafetyStatus;
+  status: LabourStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type LabourSkill = 'UNSKILLED' | 'SEMI_SKILLED' | 'SKILLED' | 'HIGHLY_SKILLED';
+export type SafetyStatus = 'COMPLIANT' | 'NON_COMPLIANT' | 'PENDING';
+export type LabourStatus = 'ACTIVE' | 'INACTIVE' | 'TERMINATED';
+
+export interface LabourDocument {
+  id: string;
+  documentType: string;
+  documentNumber: string;
+  issueDate: string;
+  expiryDate?: string;
+  documentFile?: string;
+}
+
+// ============================================================
+// 15. LABOUR CONTRACTOR
 // ============================================================
 export interface LabourContractor {
   id: string;
   contractorId: string;
   name: string;
-  contactPerson: string;
-  contactNumber: string;
-  email?: string;
+  contact: string;
   address: string;
   gstNumber?: string;
-  licenseNumber?: string;
-  specialization?: string;
-  maxLabourCount: number;
-  ratePerLabour?: number;
-  status: 'ACTIVE' | 'INACTIVE';
+  licenceNumber: string;
+  licenceExpiry: string;
+  labourCount: number;
+  projects: string[];
+  status: 'ACTIVE' | 'INACTIVE' | 'BLACKLISTED';
   createdAt: string;
   updatedAt: string;
 }
 
 // ============================================================
-// 20. PROJECT MANPOWER
+// 16. HR DASHBOARD KPIs
 // ============================================================
-export interface ProjectManpower {
-  id: string;
-  projectId: string;
-  date: string;
-  totalLabour: number;
+export interface HRDashboardKPIs {
   totalManpower: number;
-  skilledLabour: number;
-  semiSkilledLabour: number;
-  unskilledLabour: number;
-  supervisors: number;
-  engineers: number;
-  createdAt: string;
+  siteManpower: number;
+  labourCount: number;
+  staffCount: number;
+  presentToday: number;
+  absentToday: number;
+  onLeave: number;
+  overtimeHours: number;
+  payrollProcessed: number;
+  payrollPending: number;
+  labourCost: number;
+  newJoiners: number;
+  exits: number;
+  trainingScheduled: number;
+  trainingCompleted: number;
+  documentExpiring: number;
+  safetyCompliant: number;
+  safetyNonCompliant: number;
+}
+
+// ============================================================
+// 17. PAYSLIP
+// ============================================================
+export interface Payslip {
+  id: string;
+  payrollId: string;
+  employeeId: string;
+  period: string;
+  earnings: PayslipEarning[];
+  deductions: PayslipDeduction[];
+  grossSalary: number;
+  totalDeductions: number;
+  netSalary: number;
+  generatedAt: string;
+  generatedBy: string;
+}
+
+export interface PayslipEarning {
+  name: string;
+  amount: number;
+}
+
+export interface PayslipDeduction {
+  name: string;
+  amount: number;
 }

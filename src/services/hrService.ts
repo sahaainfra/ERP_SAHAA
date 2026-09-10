@@ -13,7 +13,7 @@ import type {
   LeaveType,
   LeaveRecord,
   HolidayCalendar,
-  LeaveOnlop,
+  LossOfPay,
   OvertimeRecord,
   Advance,
   Training,
@@ -21,7 +21,8 @@ import type {
   TransferHistory,
   ExitRecord,
   LabourContractor,
-  ProjectManpower
+  ProjectManpower,
+  EmployeeDocument
 } from '../types/hr';
 
 export class HRService {
@@ -36,7 +37,7 @@ export class HRService {
   private leaveTypes: Map<string, LeaveType> = new Map();
   private leaveRecords: Map<string, LeaveRecord[]> = new Map();
   private holidayCalendars: Map<string, HolidayCalendar> = new Map();
-  private leaveOnlops: Map<string, LeaveOnlop[]> = new Map();
+  private lossOfPayRecords: Map<string, LossOfPay[]> = new Map();
   private overtimeRecords: Map<string, OvertimeRecord[]> = new Map();
   private advances: Map<string, Advance[]> = new Map();
   private trainings: Map<string, Training> = new Map();
@@ -72,13 +73,11 @@ export class HRService {
 
     // Create joining history
     this.addEmploymentHistory({
-      id: '',
       employeeId: id,
       eventType: 'JOINING',
       eventDate: data.joiningDate,
-      newValue: JSON.stringify({ employeeId: id, projectId: data.projectId, siteId: data.siteId }),
+      details: { project: data.project, site: data.site },
       createdBy: 'system',
-      createdAt: new Date().toISOString(),
     });
 
     return employee;
@@ -88,16 +87,12 @@ export class HRService {
     return this.employees.get(id);
   }
 
-  getEmployeesByCompany(companyId: string): Employee[] {
-    return Array.from(this.employees.values()).filter(e => e.companyId === companyId);
-  }
-
   getEmployeesByProject(projectId: string): Employee[] {
-    return Array.from(this.employees.values()).filter(e => e.projectId === projectId);
+    return Array.from(this.employees.values()).filter(e => e.project === projectId);
   }
 
   getEmployeesBySite(siteId: string): Employee[] {
-    return Array.from(this.employees.values()).filter(e => e.siteId === siteId);
+    return Array.from(this.employees.values()).filter(e => e.site === siteId);
   }
 
   updateEmployee(id: string, updates: Partial<Employee>): void {
@@ -152,11 +147,11 @@ export class HRService {
   }
 
   getLabourByProject(projectId: string): Labour[] {
-    return Array.from(this.labour.values()).filter(l => l.projectId === projectId);
+    return Array.from(this.labour.values()).filter(l => l.project === projectId);
   }
 
   getLabourBySite(siteId: string): Labour[] {
-    return Array.from(this.labour.values()).filter(l => l.siteId === siteId);
+    return Array.from(this.labour.values()).filter(l => l.site === siteId);
   }
 
   updateLabour(id: string, updates: Partial<Labour>): void {
@@ -216,14 +211,12 @@ export class HRService {
   // PAYROLL
   // ============================================================
 
-  createPayroll(data: Omit<Payroll, 'id' | 'grossSalary' | 'netSalary' | 'status' | 'payslipGenerated' | 'createdAt' | 'updatedAt'>): Payroll {
+  createPayroll(data: Omit<Payroll, 'id' | 'grossSalary' | 'netSalary' | 'totalDeductions' | 'status' | 'payslipGenerated' | 'createdAt' | 'updatedAt'>): Payroll {
     const id = `pay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
-    const grossSalary = data.basic + data.hra + data.allowances + 
-                       data.overtime + data.bonus + data.incentive;
-    
-    const totalDeductions = data.deductions.reduce((sum, d) => sum + d.amount, 0);
-    const netSalary = grossSalary - totalDeductions;
+    const grossSalary = data.salaryStructure.grossSalary;
+    const totalDeductions = data.salaryStructure.deductions.reduce((sum: number, d) => sum + d.amount, 0);
+    const netSalary = data.salaryStructure.netSalary;
 
     const payroll: Payroll = {
       ...data,
@@ -338,7 +331,6 @@ export class HRService {
       id,
       days,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
 
     const records = this.leaveRecords.get(data.employeeId) || [];
@@ -368,23 +360,23 @@ export class HRService {
     return this.holidayCalendars.get(year.toString());
   }
 
-  createLeaveOnlop(data: Omit<LeaveOnlop, 'id' | 'createdAt'>): LeaveOnlop {
+  createLossOfPay(data: Omit<LossOfPay, 'id' | 'createdAt'>): LossOfPay {
     const id = `lop_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const lop: LeaveOnlop = {
+    const lop: LossOfPay = {
       ...data,
       id,
       createdAt: new Date().toISOString(),
     };
 
-    const lops = this.leaveOnlops.get(data.employeeId) || [];
+    const lops = this.lossOfPayRecords.get(data.employeeId) || [];
     lops.push(lop);
-    this.leaveOnlops.set(data.employeeId, lops);
+    this.lossOfPayRecords.set(data.employeeId, lops);
 
     return lop;
   }
 
-  getLeaveOnlops(employeeId: string): LeaveOnlop[] {
-    return this.leaveOnlops.get(employeeId) || [];
+  getLossOfPayRecords(employeeId: string): LossOfPay[] {
+    return this.lossOfPayRecords.get(employeeId) || [];
   }
 
   // ============================================================
@@ -417,12 +409,13 @@ export class HRService {
   // ADVANCE
   // ============================================================
 
-  createAdvance(data: Omit<Advance, 'id' | 'recoveredAmount' | 'status' | 'createdAt' | 'updatedAt'>): Advance {
+  createAdvance(data: Omit<Advance, 'id' | 'totalRecovered' | 'balanceAmount' | 'status' | 'createdAt' | 'updatedAt'>): Advance {
     const id = `adv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const advance: Advance = {
       ...data,
       id,
-      recoveredAmount: 0,
+      totalRecovered: 0,
+      balanceAmount: data.amount,
       status: 'REQUESTED',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -582,12 +575,11 @@ export class HRService {
   // PROJECT MANPOWER
   // ============================================================
 
-  createProjectManpower(data: Omit<ProjectManpower, 'id' | 'totalLabour' | 'totalManpower' | 'createdAt'>): ProjectManpower {
+  createProjectManpower(data: Omit<ProjectManpower, 'id'>): ProjectManpower {
     const id = `pm_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const manpower: ProjectManpower = {
       ...data,
       id,
-      createdAt: new Date().toISOString(),
     };
 
     const manpowers = this.projectManpower.get(data.projectId) || [];
@@ -606,18 +598,18 @@ export class HRService {
   // ============================================================
 
   getHRDashboardKPIs(companyId: string) {
-    const employees = this.getEmployeesByCompany(companyId);
+    const employees = Array.from(this.employees.values());
     const allLabour = Array.from(this.labour.values());
     
-    const activeEmployees = employees.filter(e => e.status === 'ACTIVE');
-    const siteEmployees = employees.filter(e => e.siteId);
-    const labourCount = allLabour.filter(l => l.status === 'ACTIVE').length;
+    const activeEmployees = employees.filter((e: Employee) => e.status === 'ACTIVE');
+    const siteEmployees = employees.filter((e: Employee) => e.site);
+    const labourCount = allLabour.filter((l: Labour) => l.status === 'ACTIVE').length;
     const staffCount = activeEmployees.length;
 
     // Calculate today's attendance
     const today = new Date().toISOString().split('T')[0];
     let attendanceToday = 0;
-    employees.forEach(emp => {
+    employees.forEach((emp: Employee) => {
       const records = this.getAttendanceRecords(emp.id);
       const todayRecord = records.find(r => r.date === today);
       if (todayRecord && todayRecord.status === 'PRESENT') {
@@ -631,21 +623,21 @@ export class HRService {
 
     // Calculate overtime hours
     let overtimeHours = 0;
-    employees.forEach(emp => {
+    employees.forEach((emp: Employee) => {
       const records = this.getOvertimeRecords(emp.id);
       overtimeHours += records.reduce((sum, r) => sum + r.hours, 0);
     });
 
     // Calculate payroll processed
     let payrollProcessed = 0;
-    employees.forEach(emp => {
+    employees.forEach((emp: Employee) => {
       const payrolls = this.getPayroll(emp.id);
       payrollProcessed += payrolls.filter(p => p.status === 'PAID').length;
     });
 
     // Calculate labour cost
     let labourCost = 0;
-    employees.forEach(emp => {
+    employees.forEach((emp: Employee) => {
       const salary = this.getCurrentSalary(emp.id);
       if (salary) {
         labourCost += salary.netSalary;
@@ -655,13 +647,13 @@ export class HRService {
     // Calculate new joiners (last 30 days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const newJoiners = employees.filter(e => new Date(e.joiningDate) >= thirtyDaysAgo).length;
+    const newJoiners = employees.filter((e: Employee) => new Date(e.joiningDate) >= thirtyDaysAgo).length;
 
     // Calculate exits (last 30 days)
     let exits = 0;
-    employees.forEach(emp => {
+    employees.forEach((emp: Employee) => {
       const exits_ = this.getExitRecords(emp.id);
-      exits += exits_.filter(e => new Date(e.exitDate) >= thirtyDaysAgo).length;
+      exits += exits_.filter((e: ExitRecord) => new Date(e.exitDate) >= thirtyDaysAgo).length;
     });
 
     // Calculate training scheduled
@@ -672,8 +664,8 @@ export class HRService {
     const thirtyDaysLater = new Date();
     thirtyDaysLater.setDate(thirtyDaysLater.getDate() + 30);
     let documentExpiring = 0;
-    employees.forEach(emp => {
-      emp.documents.forEach(doc => {
+    employees.forEach((emp: Employee) => {
+      emp.documents.forEach((doc: EmployeeDocument) => {
         if (doc.expiryDate) {
           const expiryDate = new Date(doc.expiryDate);
           if (expiryDate <= thirtyDaysLater && expiryDate >= new Date()) {
