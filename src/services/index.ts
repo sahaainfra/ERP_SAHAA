@@ -884,3 +884,6 @@ export { materialControlService, MaterialControlService } from './materialContro
 
 // Part 20: Procurement Control Service
 export { procurementControlService, ProcurementControlService } from './procurementControlService';
+
+// Part 21: Measurement Book Service
+export { mbService, MBService } from './mbService';

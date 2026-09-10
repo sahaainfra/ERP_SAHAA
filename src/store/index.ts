@@ -408,3 +408,6 @@ export { useMaterialControlStore } from './materialControlStore';
 
 // Part 20: Procurement Control Store
 export { useProcurementControlStore } from './procurementControlStore';
+
+// Part 21: Measurement Book Store
+export { useMBStore } from './mbStore';

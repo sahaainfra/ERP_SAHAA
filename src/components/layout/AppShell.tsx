@@ -28,6 +28,8 @@ import { QualityDashboard } from '../quality/QualityDashboard';
 import { MaterialControlDashboard } from '../materialControl/MaterialControlDashboard';
 import { ProcurementControlCenter } from '../procurementControl/ProcurementControlCenter';
 import { MaterialControlCenter } from '../procurementControl/MaterialControlCenter';
+import { MBDashboard } from '../mb/MBDashboard';
+import { MBList } from '../mb/MBList';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -169,6 +171,12 @@ export function AppShell() {
     }
     if (activeModule === 'material-control-center') {
       return <MaterialControlCenter />;
+    }
+    if (activeModule === 'mb') {
+      return <MBDashboard />;
+    }
+    if (activeModule === 'mb-list') {
+      return <MBList />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

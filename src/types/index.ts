@@ -590,3 +590,6 @@ export * from './materialControl';
 
 // Re-export all procurement control types from Part 20
 export * from './procurementControl';
+
+// Re-export all MB types from Part 21
+export * from './mb';
