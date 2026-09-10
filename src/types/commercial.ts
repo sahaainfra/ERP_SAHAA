@@ -1,451 +1,314 @@
 // ============================================================
-// BUILDCORE ERP - COMMERCIAL CHANGE CONTROL TYPES
-// Part 12: Complete Commercial Change-Control System
+// BUILDCORE ERP - COMMERCIAL MANAGEMENT TYPES
+// Part 23: Commercial Management / Receivables / Claims
 // ============================================================
 
 import type { EntityStatus } from './index';
 
 // ============================================================
-// 1. VARIATION MASTER
+// 1. COMMERCIAL 360° VIEW
 // ============================================================
-export interface VariationMaster {
-  id: string;
-  companyId: string;
-  variationNumber: string;
+export interface Commercial360View {
   projectId: string;
-  projectName: string;
-  contractId: string;
-  contractNumber: string;
-  boqItemId?: string;
-  wbsId?: string;
-  description: string;
-  variationType: VariationType;
-  originalQuantity: number;
-  revisedQuantity: number;
-  varianceQuantity: number;
-  originalRate: number;
-  proposedRate: number;
-  approvedRate: number;
-  originalAmount: number;
-  revisedAmount: number;
-  varianceAmount: number;
-  percentageVariance: number;
-  reason: string;
-  initiatedBy: string;
-  initiatedDate: string;
-  status: VariationStatus;
-  approvedBy?: string;
-  approvedAt?: string;
-  supportingDocumentId?: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-  version: number;
+  contractValue: ContractValueBreakdown;
+  executionValue: number;
+  measuredValue: number;
+  billingValue: BillingValueBreakdown;
+  certificationValue: CertificationValueBreakdown;
+  receivableValue: ReceivableValueBreakdown;
+  collectionValue: CollectionValueBreakdown;
+  profitability: ProfitabilityBreakdown;
 }
 
-export type VariationType = 
-  | 'QUANTITY_VARIATION'
-  | 'RATE_VARIATION'
-  | 'SCOPE_CHANGE'
-  | 'SPECIFICATION_CHANGE'
-  | 'DESIGN_CHANGE'
-  | 'CLIENT_INSTRUCTION'
-  | 'CONSULTANT_INSTRUCTION'
-  | 'OMISSION'
-  | 'ADDITION'
-  | 'SUBSTITUTION'
-  | 'RE_MEASUREMENT'
-  | 'OTHER';
+export interface ContractValueBreakdown {
+  originalValue: number;
+  revisedValue: number;
+  variationValue: number;
+  claimValue: number;
+  totalValue: number;
+}
 
-export type VariationStatus = 
-  | 'DRAFT'
-  | 'SUBMITTED'
-  | 'UNDER_REVIEW'
-  | 'APPROVED'
-  | 'REJECTED'
-  | 'CANCELLED';
+export interface BillingValueBreakdown {
+  billedAmount: number;
+  certifiedAmount: number;
+  uncertifiedAmount: number;
+}
 
-// ============================================================
-// 2. DEVIATION CONTROL
-// ============================================================
-export interface DeviationControl {
-  id: string;
-  contractId: string;
-  boqItemId: string;
-  itemNumber: string;
-  description: string;
-  contractQuantity: number;
-  executedQuantity: number;
-  balanceQuantity: number;
-  deviationPercent: number;
-  allowedThreshold: number;
-  approvalRequired: boolean;
-  status: 'WITHIN_LIMIT' | 'THRESHOLD_EXCEEDED' | 'APPROVAL_PENDING' | 'APPROVED';
-  alertSent: boolean;
-  createdAt: string;
-  updatedAt: string;
+export interface CertificationValueBreakdown {
+  certifiedAmount: number;
+  pendingCertification: number;
+  rejectedAmount: number;
+}
+
+export interface ReceivableValueBreakdown {
+  totalReceivable: number;
+  currentReceivable: number;
+  overdueReceivable: number;
+}
+
+export interface CollectionValueBreakdown {
+  collectedAmount: number;
+  pendingCollection: number;
+  collectionTarget: number;
+}
+
+export interface ProfitabilityBreakdown {
+  contractValue: number;
+  totalCost: number;
+  grossProfit: number;
+  grossProfitMargin: number;
+  netProfit: number;
+  netProfitMargin: number;
 }
 
 // ============================================================
-// 3. EXTRA ITEM
+// 2. CONTRACT POSITION
 // ============================================================
-export interface ExtraItem {
-  id: string;
-  companyId: string;
-  extraItemNumber: string;
+export interface ContractPosition {
   projectId: string;
   contractId: string;
-  description: string;
-  specification?: string;
-  uom: string;
-  quantity: number;
-  proposedRate: number;
-  approvedRate?: number;
-  rateAnalysisId?: string;
-  rateSource: 'COMPANY_RATE' | 'MARKET_QUOTATION' | 'VENDOR_QUOTATION' | 'RATE_ANALYSIS' | 'NEGOTIATED_RATE';
-  supportingDocumentId?: string;
-  clientInstructionId?: string;
-  reason: string;
-  status: 'DRAFT' | 'SUBMITTED' | 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED';
-  approvedBy?: string;
-  approvedAt?: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
+  originalContractValue: number;
+  revisedContractValue: number;
+  executedValue: number;
+  measuredValue: number;
+  certifiedValue: number;
+  billedValue: number;
+  receivedValue: number;
+  outstanding: number;
+  variance: number;
+  variancePercent: number;
 }
 
 // ============================================================
-// 4. RATE NEGOTIATION
+// 3. RECEIVABLE AGEING
 // ============================================================
-export interface RateNegotiation {
+export interface ReceivableAgeing {
   id: string;
-  extraItemId?: string;
-  variationId?: string;
-  itemDescription: string;
-  initialProposedRate: number;
-  clientRate?: number;
-  contractorRate: number;
-  negotiatedRate: number;
-  finalApprovedRate: number;
-  negotiationHistory: NegotiationEntry[];
-  participants: string[];
-  conclusionDate?: string;
-  status: 'IN_PROGRESS' | 'COMPLETED' | 'FAILED';
-  createdAt: string;
-  updatedAt: string;
+  projectId: string;
+  clientId: string;
+  billId: string;
+  billNumber: string;
+  billDate: string;
+  dueDate: string;
+  totalAmount: number;
+  outstandingAmount: number;
+  ageingBucket: AgeingBucket;
+  daysOutstanding: number;
 }
 
-export interface NegotiationEntry {
+export interface AgeingBucket {
   id: string;
-  date: string;
-  proposedBy: string;
-  proposedRate: number;
+  companyId: string;
+  bucketName: string;
+  minDays: number;
+  maxDays: number;
+  sortOrder: number;
+}
+
+export interface ReceivableAgeingSummary {
+  bucketName: string;
+  count: number;
+  totalAmount: number;
+  percentage: number;
+}
+
+// ============================================================
+// 4. COLLECTION PLANNING
+// ============================================================
+export interface CollectionPlan {
+  id: string;
+  projectId: string;
+  clientId: string;
+  month: string;
+  expectedAmount: number;
+  responsiblePersonId: string;
+  responsiblePersonName: string;
+  commitmentDate: string;
+  actualReceipt?: number;
+  receiptDate?: string;
+  status: CollectionStatus;
   remarks?: string;
 }
 
+export type CollectionStatus = 'PLANNED' | 'COMMITTED' | 'PARTIALLY_RECEIVED' | 'RECEIVED' | 'OVERDUE';
+
 // ============================================================
-// 5. CLIENT INSTRUCTION
+// 5. FOLLOW-UP CRM
 // ============================================================
-export interface ClientInstruction {
+export interface FollowUpActivity {
   id: string;
-  companyId: string;
-  instructionNumber: string;
-  projectId: string;
-  contractId: string;
-  instructionDate: string;
-  issuer: string;
-  issuerOrganization: string;
-  clauseReference?: string;
+  projectId?: string;
+  clientId?: string;
+  billId?: string;
+  activityType: FollowUpType;
+  activityDate: string;
   description: string;
-  impact: string;
-  requiredAction: string;
-  attachmentId?: string;
-  status: 'RECEIVED' | 'UNDER_REVIEW' | 'ACKNOWLEDGED' | 'IMPLEMENTED' | 'DISPUTED';
+  performedBy: string;
+  performedByName: string;
+  nextFollowUpDate?: string;
+  outcome?: string;
+  attachments?: string[];
+  status: 'PLANNED' | 'COMPLETED' | 'CANCELLED';
+}
+
+export type FollowUpType = 'PHONE_CALL' | 'EMAIL' | 'MEETING' | 'SITE_VISIT' | 'REMINDER' | 'LETTER' | 'NOTICE';
+
+// ============================================================
+// 6. COMMERCIAL CORRESPONDENCE
+// ============================================================
+export interface CommercialCorrespondence {
+  id: string;
+  projectId?: string;
+  contractId?: string;
+  billId?: string;
+  correspondenceType: 'INCOMING' | 'OUTGOING';
+  referenceNumber: string;
+  subject: string;
+  date: string;
+  sender: string;
+  recipient: string;
+  contractClause?: string;
+  responseDueDate?: string;
+  content: string;
+  attachments: string[];
+  status: CorrespondenceStatus;
+  responseReceived?: boolean;
   responseDate?: string;
-  response?: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
+  responseContent?: string;
 }
 
-// ============================================================
-// 6. SITE INSTRUCTION
-// ============================================================
-export interface SiteInstruction {
-  id: string;
-  companyId: string;
-  instructionNumber: string;
-  projectId: string;
-  siteId: string;
-  contractId: string;
-  instructionDate: string;
-  issuedBy: string;
-  issuedByName: string;
-  activity?: string;
-  description: string;
-  impact?: string;
-  complianceRequired: boolean;
-  evidenceId?: string;
-  status: 'ISSUED' | 'ACKNOWLEDGED' | 'COMPLETED' | 'CLOSED';
-  completedAt?: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-}
+export type CorrespondenceStatus = 'DRAFT' | 'SENT' | 'RECEIVED' | 'RESPONDED' | 'CLOSED';
 
 // ============================================================
-// 7. CLAIM REGISTER
+// 7. CLAIM MANAGEMENT
 // ============================================================
-export interface ClaimRegister {
+export interface Claim {
   id: string;
   companyId: string;
   claimNumber: string;
   projectId: string;
-  projectName: string;
   contractId: string;
-  contractNumber: string;
   claimType: ClaimType;
+  title: string;
+  description: string;
   claimAmount: number;
-  basis: string;
-  clauseReference: string;
+  claimedDate: string;
   eventDate: string;
-  noticeDate: string;
-  submissionDate?: string;
-  supportingEvidence: ClaimEvidence[];
+  supportingDocuments: string[];
   status: ClaimStatus;
-  recommendedAmount?: number;
-  approvedAmount?: string;
-  certifiedAmount?: number;
-  paidAmount?: number;
-  approvedBy?: string;
-  approvedAt?: string;
+  noticeSent: boolean;
+  noticeDate?: string;
+  submittedDate?: string;
+  reviewDate?: string;
+  queryRaised?: boolean;
+  queryDate?: string;
+  queryResponse?: string;
+  negotiationStarted?: boolean;
+  negotiationDate?: string;
+  approvedAmount?: number;
+  approvedDate?: string;
   rejectedReason?: string;
-  createdAt: string;
-  updatedAt: string;
+  certifiedAmount?: number;
+  certifiedDate?: string;
+  paidAmount?: number;
+  paidDate?: string;
   createdBy: string;
+  createdAt: string;
   updatedBy: string;
+  updatedAt: string;
   version: number;
 }
 
-export type ClaimType = 
-  | 'ADDITIONAL_WORK'
+export type ClaimType =
   | 'DELAY'
-  | 'PRICE_ESCALATION'
-  | 'IDLE_RESOURCES'
-  | 'ACCELERATION'
-  | 'PROLONGATION'
+  | 'EOT'
+  | 'ESCALATION'
   | 'VARIATION'
-  | 'COMPENSATION'
-  | 'OTHER';
+  | 'EXTRA_ITEM'
+  | 'IDLE_RESOURCES'
+  | 'PROLONGATION_COST'
+  | 'CLIENT_INSTRUCTION'
+  | 'QUANTITY_VARIATION';
 
-export type ClaimStatus = 
+export type ClaimStatus =
   | 'DRAFT'
-  | 'NOTICE_ISSUED'
+  | 'NOTICE_SENT'
   | 'SUBMITTED'
   | 'UNDER_REVIEW'
   | 'QUERY_RAISED'
-  | 'NEGOTIATION'
-  | 'RECOMMENDED'
+  | 'IN_NEGOTIATION'
   | 'APPROVED'
   | 'REJECTED'
   | 'CERTIFIED'
-  | 'PAID'
-  | 'CLOSED';
-
-export interface ClaimEvidence {
-  id: string;
-  claimId: string;
-  evidenceType: ClaimEvidenceType;
-  documentId: string;
-  description: string;
-  uploadedBy: string;
-  uploadedAt: string;
-}
-
-export type ClaimEvidenceType = 
-  | 'LETTER'
-  | 'PHOTO'
-  | 'DAILY_REPORT'
-  | 'PROGRAMME'
-  | 'MEASUREMENT'
-  | 'INVOICE'
-  | 'RESOURCE_RECORD'
-  | 'PLANT_LOG'
-  | 'ATTENDANCE'
-  | 'CORRESPONDENCE';
+  | 'PAID';
 
 // ============================================================
-// 8. EOT REGISTER
+// 8. COMMERCIAL RISK REGISTER
 // ============================================================
-export interface EOTRegister {
+export interface CommercialRisk {
   id: string;
   companyId: string;
-  eotNumber: string;
   projectId: string;
-  projectName: string;
-  contractId: string;
-  contractNumber: string;
-  reason: EOTReason;
-  eventDescription: string;
-  eventStartDate: string;
-  eventEndDate?: string;
-  affectedActivities: string[];
-  originalCompletionDate: string;
-  requestedExtension: number; // days
-  approvedExtension?: number; // days
-  revisedCompletionDate?: string;
-  status: EOTStatus;
-  supportingDocuments: string[];
-  approvedBy?: string;
-  approvedAt?: string;
-  rejectedReason?: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-  version: number;
-}
-
-export type EOTReason = 
-  | 'CLIENT_DELAY'
-  | 'DRAWING_DELAY'
-  | 'LAND_ISSUE'
-  | 'UTILITY_SHIFTING'
-  | 'MATERIAL_APPROVAL'
-  | 'DESIGN_CHANGE'
-  | 'FORCE_MAJEURE'
-  | 'WEATHER'
-  | 'STATUTORY_APPROVAL'
-  | 'OTHER';
-
-export type EOTStatus = 
-  | 'DRAFT'
-  | 'SUBMITTED'
-  | 'UNDER_REVIEW'
-  | 'APPROVED'
-  | 'PARTIALLY_APPROVED'
-  | 'REJECTED'
-  | 'WITHDRAWN';
-
-// ============================================================
-// 9. DELAY EVENT
-// ============================================================
-export interface DelayEvent {
-  id: string;
-  companyId: string;
-  eventNumber: string;
-  projectId: string;
-  contractId: string;
-  cause: string;
-  responsibleParty: 'CLIENT' | 'CONSULTANT' | 'CONTRACTOR' | 'THIRD_PARTY' | 'FORCE_MAJEURE';
-  startDate: string;
-  endDate?: string;
-  durationDays: number;
-  affectedActivity?: string;
-  evidence?: string;
-  noticeIssued: boolean;
-  noticeDate?: string;
-  claimId?: string;
-  eotId?: string;
-  status: 'IDENTIFIED' | 'NOTIFIED' | 'UNDER_ANALYSIS' | 'RESOLVED' | 'CLOSED';
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-}
-
-// ============================================================
-// 10. COMMERCIAL IMPACT
-// ============================================================
-export interface CommercialImpact {
-  id: string;
-  variationId?: string;
-  claimId?: string;
-  eotId?: string;
-  additionalCost: number;
-  lostProductivity: number;
-  idlePlant: number;
-  idleManpower: number;
-  materialEscalation: number;
-  overhead: number;
-  revenueImpact: number;
-  totalImpact: number;
-  calculatedAt: string;
-  calculatedBy: string;
-}
-
-// ============================================================
-// 11. CHANGE REGISTER
-// ============================================================
-export interface ChangeRegister {
-  id: string;
-  changeType: 'VARIATION' | 'DEVIATION' | 'EXTRA_ITEM' | 'CLAIM' | 'EOT' | 'INSTRUCTION' | 'AMENDMENT';
-  changeId: string;
-  changeNumber: string;
-  projectId: string;
-  contractId: string;
+  riskType: CommercialRiskType;
+  title: string;
   description: string;
-  value: number;
-  status: string;
-  date: string;
-  impact: 'COST' | 'TIME' | 'BOTH' | 'NONE';
+  amount: number;
+  probability: RiskProbability;
+  impact: RiskImpact;
+  riskScore: number;
+  mitigationPlan?: string;
+  status: RiskStatus;
+  identifiedDate: string;
+  resolvedDate?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedBy: string;
+  updatedAt: string;
 }
 
+export type CommercialRiskType =
+  | 'UNCERTIFIED_BILLS'
+  | 'LONG_OUTSTANDING_RECEIVABLES'
+  | 'UNAPPROVED_VARIATION'
+  | 'UNRECOVERED_ADVANCE'
+  | 'EXCESS_QUANTITY'
+  | 'RETENTION'
+  | 'SECURITY'
+  | 'CLAIM_AGEING'
+  | 'CONTRACT_EXPIRY';
+
+export type RiskProbability = 'LOW' | 'MEDIUM' | 'HIGH' | 'VERY_HIGH';
+export type RiskImpact = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+export type RiskStatus = 'IDENTIFIED' | 'MITIGATING' | 'RESOLVED' | 'ACCEPTED';
+
 // ============================================================
-// 12. COMMERCIAL DASHBOARD KPIs
+// 9. COMMERCIAL DASHBOARD KPIs
 // ============================================================
 export interface CommercialDashboardKPIs {
-  totalVariations: number;
-  variationValue: number;
-  pendingVariations: number;
-  approvedVariations: number;
-  extraItemValue: number;
-  pendingExtraItems: number;
-  totalClaims: number;
-  claimValue: number;
-  pendingClaims: number;
-  approvedClaims: number;
-  claimAgeing: ClaimAgeingBucket[];
-  eotRequests: number;
-  approvedEOT: number;
-  totalEOTDays: number;
-  delayDays: number;
-  potentialRecovery: number;
-  deviationAlerts: number;
+  contractValue: number;
+  billingValue: number;
+  certificationValue: number;
+  collectionValue: number;
+  outstandingValue: number;
+  claimsValue: number;
+  variationsValue: number;
+  retentionValue: number;
+  advanceValue: number;
+  commercialRiskScore: number;
+  receivableAgeing: ReceivableAgeingSummary[];
+  claimStatus: ClaimStatusSummary[];
+  collectionPerformance: CollectionPerformanceSummary;
 }
 
-export interface ClaimAgeingBucket {
-  bucket: string; // 0-30, 31-60, 61-90, 90+
+export interface ClaimStatusSummary {
+  status: ClaimStatus;
   count: number;
-  value: number;
+  totalAmount: number;
 }
 
-// ============================================================
-// 13. COMMERCIAL ALERT
-// ============================================================
-export interface CommercialAlert {
-  id: string;
-  alertType: CommercialAlertType;
-  title: string;
-  message: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  entityId?: string;
-  entityType?: string;
-  dueDate?: string;
-  isAcknowledged: boolean;
-  acknowledgedAt?: string;
-  acknowledgedBy?: string;
-  createdAt: string;
+export interface CollectionPerformanceSummary {
+  targetAmount: number;
+  collectedAmount: number;
+  collectionPercentage: number;
+  overdueAmount: number;
 }
-
-export type CommercialAlertType = 
-  | 'VARIATION_THRESHOLD_EXCEEDED'
-  | 'EXTRA_ITEM_PENDING'
-  | 'CLAIM_DEADLINE'
-  | 'EOT_DEADLINE'
-  | 'NOTICE_RESPONSE_OVERDUE'
-  | 'CLIENT_INSTRUCTION_PENDING';

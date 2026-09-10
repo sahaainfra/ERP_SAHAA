@@ -858,9 +858,6 @@ export { boqService, BOQService } from './boqService';
 // Part 11: Contract Service
 export { contractService, ContractService } from './contractService';
 
-// Part 12: Commercial Service
-export { commercialService, CommercialService } from './commercialService';
-
 // Part 13: Material Service
 export { materialService, MaterialService } from './materialService';
 
@@ -890,3 +887,6 @@ export { mbService, MBService } from './mbService';
 
 // Part 22: Billing Service
 export { billingService, BillingService } from './billingService';
+
+// Part 23: Commercial Service
+export { commercialService, CommercialService } from './commercialService';

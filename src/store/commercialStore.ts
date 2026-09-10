@@ -1,337 +1,365 @@
 // ============================================================
-// BUILDCORE ERP - COMMERCIAL CHANGE CONTROL STORE
-// Part 12: Complete Commercial Change-Control System
+// BUILDCORE ERP - COMMERCIAL MANAGEMENT STORE
+// Part 23: Commercial Management / Receivables / Claims
 // ============================================================
 
 import { create } from 'zustand';
 import type {
-  VariationMaster, DeviationControl, ExtraItem, RateNegotiation,
-  ClientInstruction, SiteInstruction, ClaimRegister, EOTRegister,
-  DelayEvent, CommercialImpact, ChangeRegister, CommercialDashboardKPIs,
-  CommercialAlert, VariationStatus, ClaimStatus
+  Commercial360View,
+  ContractPosition,
+  ReceivableAgeing,
+  AgeingBucket,
+  ReceivableAgeingSummary,
+  CollectionPlan,
+  FollowUpActivity,
+  CommercialCorrespondence,
+  Claim,
+  CommercialRisk,
+  CommercialDashboardKPIs,
+  ClaimStatusSummary,
+  CollectionPerformanceSummary
 } from '../types/commercial';
 import { commercialService } from '../services/commercialService';
 
 interface CommercialState {
   // Data
-  variations: VariationMaster[];
-  deviations: DeviationControl[];
-  extraItems: ExtraItem[];
-  rateNegotiations: RateNegotiation[];
-  clientInstructions: ClientInstruction[];
-  siteInstructions: SiteInstruction[];
-  claims: ClaimRegister[];
-  eots: EOTRegister[];
-  delayEvents: DelayEvent[];
-  commercialImpacts: CommercialImpact[];
-  changeRegister: ChangeRegister[];
-  alerts: CommercialAlert[];
+  commercial360View: Commercial360View | null;
+  contractPosition: ContractPosition | null;
+  ageingBuckets: AgeingBucket[];
+  receivableAgeing: ReceivableAgeing[];
+  receivableAgeingSummary: ReceivableAgeingSummary[];
+  collectionPlans: CollectionPlan[];
+  collectionPerformance: CollectionPerformanceSummary | null;
+  followUpActivities: FollowUpActivity[];
+  correspondences: CommercialCorrespondence[];
+  claims: Claim[];
+  claimStatusSummary: ClaimStatusSummary[];
+  commercialRisks: CommercialRisk[];
   dashboardKPIs: CommercialDashboardKPIs | null;
   
-  // Filters
-  selectedContractId: string | null;
+  // UI State
+  isLoading: boolean;
+  error: string | null;
   selectedProjectId: string | null;
   
   // Actions
-  initialize: () => void;
-  setContractFilter: (contractId: string | null) => void;
-  setProjectFilter: (projectId: string | null) => void;
+  loadCommercial360View: (projectId: string) => void;
+  loadContractPosition: (projectId: string) => void;
+  loadAgeingBuckets: (companyId: string) => void;
+  createAgeingBucket: (bucket: Omit<AgeingBucket, 'id'>) => void;
+  loadReceivableAgeing: (companyId: string) => void;
+  loadReceivableAgeingSummary: (companyId: string) => void;
+  loadCollectionPlans: (projectId?: string) => void;
+  createCollectionPlan: (plan: Omit<CollectionPlan, 'id'>) => void;
+  updateCollectionPlan: (id: string, updates: Partial<CollectionPlan>) => void;
+  loadCollectionPerformance: (projectId: string) => void;
+  loadFollowUpActivities: (projectId?: string, clientId?: string) => void;
+  createFollowUpActivity: (activity: Omit<FollowUpActivity, 'id'>) => void;
+  updateFollowUpActivity: (id: string, updates: Partial<FollowUpActivity>) => void;
+  loadCorrespondences: (projectId?: string, contractId?: string) => void;
+  createCorrespondence: (correspondence: Omit<CommercialCorrespondence, 'id'>) => void;
+  updateCorrespondence: (id: string, updates: Partial<CommercialCorrespondence>) => void;
+  loadClaims: (companyId: string, projectId?: string) => void;
+  createClaim: (claim: Omit<Claim, 'id' | 'createdAt' | 'updatedAt' | 'version'>) => void;
+  updateClaim: (id: string, updates: Partial<Claim>) => void;
+  loadClaimStatusSummary: (companyId: string) => void;
+  loadCommercialRisks: (companyId: string, projectId?: string) => void;
+  createCommercialRisk: (risk: Omit<CommercialRisk, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  updateCommercialRisk: (id: string, updates: Partial<CommercialRisk>) => void;
+  loadCommercialDashboardKPIs: (companyId: string) => void;
   
-  // Variation actions
-  createVariation: (data: any) => VariationMaster;
-  getVariationsByContract: (contractId: string) => VariationMaster[];
-  updateVariationStatus: (id: string, status: VariationStatus, approvedBy?: string) => void;
-  
-  // Deviation actions
-  createDeviationControl: (data: any) => DeviationControl;
-  getDeviationsByContract: (contractId: string) => DeviationControl[];
-  updateDeviationExecutedQuantity: (id: string, executedQuantity: number) => void;
-  
-  // Extra Item actions
-  createExtraItem: (data: any) => ExtraItem;
-  getExtraItemsByContract: (contractId: string) => ExtraItem[];
-  updateExtraItemStatus: (id: string, status: ExtraItem['status'], approvedBy?: string, approvedRate?: number) => void;
-  
-  // Rate Negotiation actions
-  createRateNegotiation: (data: any) => RateNegotiation;
-  addNegotiationEntry: (negotiationId: string, entry: any) => void;
-  completeNegotiation: (negotiationId: string, finalApprovedRate: number) => void;
-  
-  // Client Instruction actions
-  createClientInstruction: (data: any) => ClientInstruction;
-  getClientInstructionsByContract: (contractId: string) => ClientInstruction[];
-  
-  // Site Instruction actions
-  createSiteInstruction: (data: any) => SiteInstruction;
-  getSiteInstructionsByContract: (contractId: string) => SiteInstruction[];
-  
-  // Claim actions
-  createClaim: (data: any) => ClaimRegister;
-  getClaimsByContract: (contractId: string) => ClaimRegister[];
-  updateClaimStatus: (id: string, status: ClaimStatus, additionalData?: Partial<ClaimRegister>) => void;
-  
-  // EOT actions
-  createEOT: (data: any) => EOTRegister;
-  getEOTsByContract: (contractId: string) => EOTRegister[];
-  approveEOT: (id: string, approvedExtension: number, approvedBy: string) => void;
-  
-  // Delay Event actions
-  createDelayEvent: (data: any) => DelayEvent;
-  getDelayEventsByContract: (contractId: string) => DelayEvent[];
-  linkDelayToClaim: (delayEventId: string, claimId: string) => void;
-  linkDelayToEOT: (delayEventId: string, eotId: string) => void;
-  
-  // Commercial Impact actions
-  calculateCommercialImpact: (entityId: string, entityType: 'VARIATION' | 'CLAIM' | 'EOT', data: any) => CommercialImpact;
-  
-  // Change Register actions
-  getChangeRegister: (projectId: string, contractId?: string) => ChangeRegister[];
-  
-  // Alert actions
-  getAlerts: (isAcknowledged?: boolean) => CommercialAlert[];
-  acknowledgeAlert: (id: string, acknowledgedBy: string) => void;
-  
-  // Dashboard actions
-  loadDashboardKPIs: (projectId: string, contractId: string) => void;
+  setSelectedProject: (projectId: string | null) => void;
+  clearError: () => void;
 }
 
 export const useCommercialStore = create<CommercialState>((set, get) => ({
   // Initial state
-  variations: [],
-  deviations: [],
-  extraItems: [],
-  rateNegotiations: [],
-  clientInstructions: [],
-  siteInstructions: [],
+  commercial360View: null,
+  contractPosition: null,
+  ageingBuckets: [],
+  receivableAgeing: [],
+  receivableAgeingSummary: [],
+  collectionPlans: [],
+  collectionPerformance: null,
+  followUpActivities: [],
+  correspondences: [],
   claims: [],
-  eots: [],
-  delayEvents: [],
-  commercialImpacts: [],
-  changeRegister: [],
-  alerts: [],
+  claimStatusSummary: [],
+  commercialRisks: [],
   dashboardKPIs: null,
-  selectedContractId: null,
+  isLoading: false,
+  error: null,
   selectedProjectId: null,
 
-  // Initialize
-  initialize: () => {
-    // Initialize with demo data if needed
+  // Load actions
+  loadCommercial360View: (projectId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const view = commercialService.getCommercial360View(projectId);
+      set({ commercial360View: view, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load commercial 360 view', isLoading: false });
+    }
   },
 
-  // Filters
-  setContractFilter: (contractId: string | null) => {
-    set({ selectedContractId: contractId });
+  loadContractPosition: (projectId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const position = commercialService.getContractPosition(projectId);
+      set({ contractPosition: position, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load contract position', isLoading: false });
+    }
   },
 
-  setProjectFilter: (projectId: string | null) => {
+  loadAgeingBuckets: (companyId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const buckets = commercialService.getAgeingBuckets(companyId);
+      set({ ageingBuckets: buckets, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load ageing buckets', isLoading: false });
+    }
+  },
+
+  createAgeingBucket: (bucket) => {
+    set({ isLoading: true, error: null });
+    try {
+      const newBucket = commercialService.createAgeingBucket(bucket);
+      set(state => ({ ageingBuckets: [...state.ageingBuckets, newBucket], isLoading: false }));
+    } catch (error) {
+      set({ error: 'Failed to create ageing bucket', isLoading: false });
+    }
+  },
+
+  loadReceivableAgeing: (companyId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const ageing = commercialService.getReceivableAgeing(companyId);
+      set({ receivableAgeing: ageing, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load receivable ageing', isLoading: false });
+    }
+  },
+
+  loadReceivableAgeingSummary: (companyId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const summary = commercialService.getReceivableAgeingSummary(companyId);
+      set({ receivableAgeingSummary: summary, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load receivable ageing summary', isLoading: false });
+    }
+  },
+
+  loadCollectionPlans: (projectId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const plans = commercialService.getCollectionPlans(projectId);
+      set({ collectionPlans: plans, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load collection plans', isLoading: false });
+    }
+  },
+
+  createCollectionPlan: (plan) => {
+    set({ isLoading: true, error: null });
+    try {
+      const newPlan = commercialService.createCollectionPlan(plan);
+      set(state => ({ collectionPlans: [...state.collectionPlans, newPlan], isLoading: false }));
+    } catch (error) {
+      set({ error: 'Failed to create collection plan', isLoading: false });
+    }
+  },
+
+  updateCollectionPlan: (id, updates) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updated = commercialService.updateCollectionPlan(id, updates);
+      if (updated) {
+        set(state => ({
+          collectionPlans: state.collectionPlans.map(c => c.id === id ? updated : c),
+          isLoading: false
+        }));
+      }
+    } catch (error) {
+      set({ error: 'Failed to update collection plan', isLoading: false });
+    }
+  },
+
+  loadCollectionPerformance: (projectId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const performance = commercialService.getCollectionPerformanceSummary(projectId);
+      set({ collectionPerformance: performance, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load collection performance', isLoading: false });
+    }
+  },
+
+  loadFollowUpActivities: (projectId, clientId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const activities = commercialService.getFollowUpActivities(projectId, clientId);
+      set({ followUpActivities: activities, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load follow-up activities', isLoading: false });
+    }
+  },
+
+  createFollowUpActivity: (activity) => {
+    set({ isLoading: true, error: null });
+    try {
+      const newActivity = commercialService.createFollowUpActivity(activity);
+      set(state => ({ followUpActivities: [...state.followUpActivities, newActivity], isLoading: false }));
+    } catch (error) {
+      set({ error: 'Failed to create follow-up activity', isLoading: false });
+    }
+  },
+
+  updateFollowUpActivity: (id, updates) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updated = commercialService.updateFollowUpActivity(id, updates);
+      if (updated) {
+        set(state => ({
+          followUpActivities: state.followUpActivities.map(a => a.id === id ? updated : a),
+          isLoading: false
+        }));
+      }
+    } catch (error) {
+      set({ error: 'Failed to update follow-up activity', isLoading: false });
+    }
+  },
+
+  loadCorrespondences: (projectId, contractId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const correspondences = commercialService.getCorrespondences(projectId, contractId);
+      set({ correspondences, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load correspondences', isLoading: false });
+    }
+  },
+
+  createCorrespondence: (correspondence) => {
+    set({ isLoading: true, error: null });
+    try {
+      const newCorrespondence = commercialService.createCorrespondence(correspondence);
+      set(state => ({ correspondences: [...state.correspondences, newCorrespondence], isLoading: false }));
+    } catch (error) {
+      set({ error: 'Failed to create correspondence', isLoading: false });
+    }
+  },
+
+  updateCorrespondence: (id, updates) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updated = commercialService.updateCorrespondence(id, updates);
+      if (updated) {
+        set(state => ({
+          correspondences: state.correspondences.map(c => c.id === id ? updated : c),
+          isLoading: false
+        }));
+      }
+    } catch (error) {
+      set({ error: 'Failed to update correspondence', isLoading: false });
+    }
+  },
+
+  loadClaims: (companyId, projectId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const claims = commercialService.getClaims(companyId, projectId);
+      set({ claims, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load claims', isLoading: false });
+    }
+  },
+
+  createClaim: (claim) => {
+    set({ isLoading: true, error: null });
+    try {
+      const newClaim = commercialService.createClaim(claim);
+      set(state => ({ claims: [...state.claims, newClaim], isLoading: false }));
+    } catch (error) {
+      set({ error: 'Failed to create claim', isLoading: false });
+    }
+  },
+
+  updateClaim: (id, updates) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updated = commercialService.updateClaim(id, updates);
+      if (updated) {
+        set(state => ({
+          claims: state.claims.map(c => c.id === id ? updated : c),
+          isLoading: false
+        }));
+      }
+    } catch (error) {
+      set({ error: 'Failed to update claim', isLoading: false });
+    }
+  },
+
+  loadClaimStatusSummary: (companyId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const summary = commercialService.getClaimStatusSummary(companyId);
+      set({ claimStatusSummary: summary, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load claim status summary', isLoading: false });
+    }
+  },
+
+  loadCommercialRisks: (companyId, projectId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const risks = commercialService.getCommercialRisks(companyId, projectId);
+      set({ commercialRisks: risks, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load commercial risks', isLoading: false });
+    }
+  },
+
+  createCommercialRisk: (risk) => {
+    set({ isLoading: true, error: null });
+    try {
+      const newRisk = commercialService.createCommercialRisk(risk);
+      set(state => ({ commercialRisks: [...state.commercialRisks, newRisk], isLoading: false }));
+    } catch (error) {
+      set({ error: 'Failed to create commercial risk', isLoading: false });
+    }
+  },
+
+  updateCommercialRisk: (id, updates) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updated = commercialService.updateCommercialRisk(id, updates);
+      if (updated) {
+        set(state => ({
+          commercialRisks: state.commercialRisks.map(r => r.id === id ? updated : r),
+          isLoading: false
+        }));
+      }
+    } catch (error) {
+      set({ error: 'Failed to update commercial risk', isLoading: false });
+    }
+  },
+
+  loadCommercialDashboardKPIs: (companyId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const kpis = commercialService.getCommercialDashboardKPIs(companyId);
+      set({ dashboardKPIs: kpis, isLoading: false });
+    } catch (error) {
+      set({ error: 'Failed to load commercial dashboard KPIs', isLoading: false });
+    }
+  },
+
+  setSelectedProject: (projectId) => {
     set({ selectedProjectId: projectId });
   },
 
-  // Variation actions
-  createVariation: (data) => {
-    const variation = commercialService.createVariation(data);
-    set(state => ({ variations: [...state.variations, variation] }));
-    return variation;
-  },
-
-  getVariationsByContract: (contractId: string) => {
-    return commercialService.getVariationsByContract(contractId);
-  },
-
-  updateVariationStatus: (id: string, status: VariationStatus, approvedBy?: string) => {
-    const variation = commercialService.updateVariationStatus(id, status, approvedBy);
-    if (variation) {
-      set(state => ({
-        variations: state.variations.map(v => v.id === id ? variation : v)
-      }));
-    }
-  },
-
-  // Deviation actions
-  createDeviationControl: (data) => {
-    const deviation = commercialService.createDeviationControl(data);
-    set(state => ({ deviations: [...state.deviations, deviation] }));
-    return deviation;
-  },
-
-  getDeviationsByContract: (contractId: string) => {
-    return commercialService.getDeviationsByContract(contractId);
-  },
-
-  updateDeviationExecutedQuantity: (id: string, executedQuantity: number) => {
-    const deviation = commercialService.updateDeviationExecutedQuantity(id, executedQuantity);
-    if (deviation) {
-      set(state => ({
-        deviations: state.deviations.map(d => d.id === id ? deviation : d)
-      }));
-    }
-  },
-
-  // Extra Item actions
-  createExtraItem: (data) => {
-    const extraItem = commercialService.createExtraItem(data);
-    set(state => ({ extraItems: [...state.extraItems, extraItem] }));
-    return extraItem;
-  },
-
-  getExtraItemsByContract: (contractId: string) => {
-    return commercialService.getExtraItemsByContract(contractId);
-  },
-
-  updateExtraItemStatus: (id: string, status: ExtraItem['status'], approvedBy?: string, approvedRate?: number) => {
-    const extraItem = commercialService.updateExtraItemStatus(id, status, approvedBy, approvedRate);
-    if (extraItem) {
-      set(state => ({
-        extraItems: state.extraItems.map(e => e.id === id ? extraItem : e)
-      }));
-    }
-  },
-
-  // Rate Negotiation actions
-  createRateNegotiation: (data) => {
-    const negotiation = commercialService.createRateNegotiation(data);
-    set(state => ({ rateNegotiations: [...state.rateNegotiations, negotiation] }));
-    return negotiation;
-  },
-
-  addNegotiationEntry: (negotiationId: string, entry: any) => {
-    const negotiation = commercialService.addNegotiationEntry(negotiationId, entry);
-    if (negotiation) {
-      set(state => ({
-        rateNegotiations: state.rateNegotiations.map(n => n.id === negotiationId ? negotiation : n)
-      }));
-    }
-  },
-
-  completeNegotiation: (negotiationId: string, finalApprovedRate: number) => {
-    const negotiation = commercialService.completeNegotiation(negotiationId, finalApprovedRate);
-    if (negotiation) {
-      set(state => ({
-        rateNegotiations: state.rateNegotiations.map(n => n.id === negotiationId ? negotiation : n)
-      }));
-    }
-  },
-
-  // Client Instruction actions
-  createClientInstruction: (data) => {
-    const instruction = commercialService.createClientInstruction(data);
-    set(state => ({ clientInstructions: [...state.clientInstructions, instruction] }));
-    return instruction;
-  },
-
-  getClientInstructionsByContract: (contractId: string) => {
-    return commercialService.getClientInstructionsByContract(contractId);
-  },
-
-  // Site Instruction actions
-  createSiteInstruction: (data) => {
-    const instruction = commercialService.createSiteInstruction(data);
-    set(state => ({ siteInstructions: [...state.siteInstructions, instruction] }));
-    return instruction;
-  },
-
-  getSiteInstructionsByContract: (contractId: string) => {
-    return commercialService.getSiteInstructionsByContract(contractId);
-  },
-
-  // Claim actions
-  createClaim: (data) => {
-    const claim = commercialService.createClaim(data);
-    set(state => ({ claims: [...state.claims, claim] }));
-    return claim;
-  },
-
-  getClaimsByContract: (contractId: string) => {
-    return commercialService.getClaimsByContract(contractId);
-  },
-
-  updateClaimStatus: (id: string, status: ClaimStatus, additionalData?: Partial<ClaimRegister>) => {
-    const claim = commercialService.updateClaimStatus(id, status, additionalData);
-    if (claim) {
-      set(state => ({
-        claims: state.claims.map(c => c.id === id ? claim : c)
-      }));
-    }
-  },
-
-  // EOT actions
-  createEOT: (data) => {
-    const eot = commercialService.createEOT(data);
-    set(state => ({ eots: [...state.eots, eot] }));
-    return eot;
-  },
-
-  getEOTsByContract: (contractId: string) => {
-    return commercialService.getEOTsByContract(contractId);
-  },
-
-  approveEOT: (id: string, approvedExtension: number, approvedBy: string) => {
-    const eot = commercialService.approveEOT(id, approvedExtension, approvedBy);
-    if (eot) {
-      set(state => ({
-        eots: state.eots.map(e => e.id === id ? eot : e)
-      }));
-    }
-  },
-
-  // Delay Event actions
-  createDelayEvent: (data) => {
-    const event = commercialService.createDelayEvent(data);
-    set(state => ({ delayEvents: [...state.delayEvents, event] }));
-    return event;
-  },
-
-  getDelayEventsByContract: (contractId: string) => {
-    return commercialService.getDelayEventsByContract(contractId);
-  },
-
-  linkDelayToClaim: (delayEventId: string, claimId: string) => {
-    const event = commercialService.linkDelayToClaim(delayEventId, claimId);
-    if (event) {
-      set(state => ({
-        delayEvents: state.delayEvents.map(d => d.id === delayEventId ? event : d)
-      }));
-    }
-  },
-
-  linkDelayToEOT: (delayEventId: string, eotId: string) => {
-    const event = commercialService.linkDelayToEOT(delayEventId, eotId);
-    if (event) {
-      set(state => ({
-        delayEvents: state.delayEvents.map(d => d.id === delayEventId ? event : d)
-      }));
-    }
-  },
-
-  // Commercial Impact actions
-  calculateCommercialImpact: (entityId: string, entityType: 'VARIATION' | 'CLAIM' | 'EOT', data: any) => {
-    const impact = commercialService.calculateCommercialImpact(entityId, entityType, data);
-    set(state => ({ commercialImpacts: [...state.commercialImpacts, impact] }));
-    return impact;
-  },
-
-  // Change Register actions
-  getChangeRegister: (projectId: string, contractId?: string) => {
-    return commercialService.getChangeRegister(projectId, contractId);
-  },
-
-  // Alert actions
-  getAlerts: (isAcknowledged?: boolean) => {
-    return commercialService.getAlerts(isAcknowledged);
-  },
-
-  acknowledgeAlert: (id: string, acknowledgedBy: string) => {
-    const alert = commercialService.acknowledgeAlert(id, acknowledgedBy);
-    if (alert) {
-      set(state => ({
-        alerts: state.alerts.map(a => a.id === id ? alert : a)
-      }));
-    }
-  },
-
-  // Dashboard actions
-  loadDashboardKPIs: (projectId: string, contractId: string) => {
-    const kpis = commercialService.getCommercialDashboardKPIs(projectId, contractId);
-    set({ dashboardKPIs: kpis });
-  },
+  clearError: () => set({ error: null })
 }));

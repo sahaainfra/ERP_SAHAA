@@ -382,9 +382,6 @@ export { useBOQStore } from './boqStore';
 // Part 11: Contract Store
 export { useContractStore } from './contractStore';
 
-// Part 12: Commercial Store
-export { useCommercialStore } from './commercialStore';
-
 // Part 13: Material Store
 export { useMaterialStore } from './materialStore';
 
@@ -414,3 +411,6 @@ export { useMBStore } from './mbStore';
 
 // Part 22: Billing Store
 export { useBillingStore } from './billingStore';
+
+// Part 23: Commercial Store
+export { useCommercialStore } from './commercialStore';
