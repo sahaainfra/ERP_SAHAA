@@ -630,3 +630,18 @@ export * from './attendance';
 
 // Re-export all plant types from Part 27
 export * from './plant';
+
+// Re-export all RMC types from Part 28
+export type {
+  RMCPlantMaster,
+  RawMaterialBatch,
+  MixDesign,
+  BatchTicket,
+  QCTestRecord,
+  DispatchRecord,
+  RMCChallan,
+  RMCCostBreakdown,
+  RMCDashboardKPIs,
+  TraceabilityRecord,
+  RMCPlantStatus
+} from './rmc';

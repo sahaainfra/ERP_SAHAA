@@ -35,6 +35,7 @@ import { BillList } from '../billing/BillList';
 import { FinanceDashboard } from '../finance/FinanceDashboard';
 import { AttendanceDashboard } from '../attendance/AttendanceDashboard';
 import { PlantDashboard } from '../plant/PlantDashboard';
+import { RMCDashboard } from '../rmc/RMCDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -197,6 +198,9 @@ export function AppShell() {
     }
     if (activeModule === 'plant') {
       return <PlantDashboard />;
+    }
+    if (activeModule === 'rmc') {
+      return <RMCDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
