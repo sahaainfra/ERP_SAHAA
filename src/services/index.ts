@@ -893,3 +893,9 @@ export { commercialService, CommercialService } from './commercialService';
 
 // Part 24: Finance Service
 export { financeService, FinanceService } from './financeService';
+
+// Part 26: Attendance Service
+export { attendanceService, AttendanceService } from './attendanceService';
+
+// Part 27: Plant Service
+export { plantService, PlantService } from './plantService';

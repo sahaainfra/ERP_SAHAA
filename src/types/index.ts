@@ -627,3 +627,6 @@ export type {
 
 // Re-export all attendance types from Part 26
 export * from './attendance';
+
+// Re-export all plant types from Part 27
+export * from './plant';

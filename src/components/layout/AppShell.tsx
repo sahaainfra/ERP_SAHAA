@@ -34,6 +34,7 @@ import { BillingDashboard } from '../billing/BillingDashboard';
 import { BillList } from '../billing/BillList';
 import { FinanceDashboard } from '../finance/FinanceDashboard';
 import { AttendanceDashboard } from '../attendance/AttendanceDashboard';
+import { PlantDashboard } from '../plant/PlantDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -193,6 +194,9 @@ export function AppShell() {
     }
     if (activeModule === 'attendance') {
       return <AttendanceDashboard />;
+    }
+    if (activeModule === 'plant') {
+      return <PlantDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {
