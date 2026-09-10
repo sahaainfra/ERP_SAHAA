@@ -596,3 +596,6 @@ export * from './mb';
 
 // Re-export all billing types from Part 22
 export * from './billing';
+
+// Re-export all finance types from Part 24
+export * from './finance';

@@ -32,6 +32,7 @@ import { MBDashboard } from '../mb/MBDashboard';
 import { MBList } from '../mb/MBList';
 import { BillingDashboard } from '../billing/BillingDashboard';
 import { BillList } from '../billing/BillList';
+import { FinanceDashboard } from '../finance/FinanceDashboard';
 import { useAppStore, useDataStore } from '../../store';
 
 // Module placeholder pages
@@ -185,6 +186,9 @@ export function AppShell() {
     }
     if (activeModule === 'bill-list') {
       return <BillList />;
+    }
+    if (activeModule === 'finance') {
+      return <FinanceDashboard />;
     }
     const config = moduleConfigs[activeModule];
     if (config) {

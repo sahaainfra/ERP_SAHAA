@@ -890,3 +890,6 @@ export { billingService, BillingService } from './billingService';
 
 // Part 23: Commercial Service
 export { commercialService, CommercialService } from './commercialService';
+
+// Part 24: Finance Service
+export { financeService, FinanceService } from './financeService';

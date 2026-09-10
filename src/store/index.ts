@@ -414,3 +414,6 @@ export { useBillingStore } from './billingStore';
 
 // Part 23: Commercial Store
 export { useCommercialStore } from './commercialStore';
+
+// Part 24: Finance Store
+export { useFinanceStore } from './financeStore';
